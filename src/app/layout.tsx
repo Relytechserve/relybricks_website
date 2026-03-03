@@ -3,6 +3,7 @@ import { DM_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import CookieConsent from "@/components/CookieConsent";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
         <Navigation />
         <main className="flex-1 w-full min-w-0">{children}</main>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   );
