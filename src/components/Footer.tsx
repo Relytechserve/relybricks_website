@@ -13,6 +13,9 @@ const footerLinks = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
   { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms & Conditions" },
+  { href: "/cookies", label: "Cookie Policy" },
 ];
 
 export default function Footer() {
@@ -91,7 +94,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-stone-700 text-center">
+        <div className="mt-12 pt-8 border-t border-stone-700 text-center space-y-2">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-stone-500">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <span>·</span>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
+            <span>·</span>
+            <Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
+          </div>
           <p className="text-sm text-stone-500">
             © {new Date().getFullYear()} RelyBricks. All Rights Reserved.
           </p>
