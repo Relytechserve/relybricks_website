@@ -33,6 +33,12 @@ export default function Navigation() {
               </Link>
             ))}
             <Link
+              href="/login"
+              className="text-stone-600 hover:text-accent-600 font-medium transition-colors"
+            >
+              Portal
+            </Link>
+            <Link
               href="/contact"
               className="px-6 py-3 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-colors shadow-lg shadow-accent-500/25"
             >
@@ -84,6 +90,13 @@ export default function Navigation() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="/login"
+                className="py-3 text-stone-600 hover:text-accent-600 font-medium"
+                onClick={() => setMobileOpen(false)}
+              >
+                Portal
+              </Link>
               <Link
                 href="/contact"
                 className="mt-2 py-3 px-4 bg-accent-600 text-white font-semibold rounded-xl text-center"

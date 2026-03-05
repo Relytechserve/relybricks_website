@@ -7,9 +7,9 @@ import {
   BuildingOffice2Icon,
   MapIcon,
   SparklesIcon,
-  CheckCircleIcon,
   PhoneIcon,
 } from "@heroicons/react/24/outline";
+import PlansSection from "@/components/PlansSection";
 
 const heroImage = "https://images.pexels.com/photos/29750117/pexels-photo-29750117.jpeg?auto=compress&w=1200";
 const propertyCardImage = "https://images.pexels.com/photos/5759269/pexels-photo-5759269.jpeg?auto=compress&w=600";
@@ -52,49 +52,6 @@ const services = [
   },
 ];
 
-const plans = [
-  {
-    name: "Basic",
-    price: "₹16,000",
-    period: "/year",
-    badge: "Up to 1000 sq. ft",
-    desc: "BASIC package for apartments up to 1000 sq. ft. Includes bills, tenant management, yearly cleaning, pest control and pay-and-use services worth ₹1,000.",
-    features: [
-      "Paying utility bills & taxes",
-      "Tenant management & rent collection",
-      "1x general cleaning + 1x pest control per year",
-      "2 property visits with photo/video updates",
-      "Pay-and-use services worth ₹1,000",
-    ],
-  },
-  {
-    name: "Gold",
-    price: "₹25,000",
-    period: "/year",
-    badge: "Up to 1500 sq. ft · Most popular",
-    desc: "GOLD package for larger homes up to 1500 sq. ft. Adds more visits, more cleaning and higher pay-and-use coverage.",
-    features: [
-      "Everything in Basic",
-      "2x general cleaning + 2x pest control per year",
-      "Quarterly visits with detailed updates",
-      "Pay-and-use services worth ₹2,000",
-      "Account manager & priority support",
-    ],
-  },
-  {
-    name: "Premium",
-    price: "Custom",
-    period: "",
-    badge: "For portfolios & estates",
-    desc: "Tailored plans for bungalows, beach houses and combined properties.",
-    features: [
-      "Everything in Gold",
-      "Sale / purchase preparation & coordination",
-      "Land & plot maintenance",
-      "Custom SLAs and reporting",
-    ],
-  },
-];
 
 const steps = [
   {
@@ -580,56 +537,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 grid-cols-1 md:grid-cols-3">
-            {plans.map((plan) => (
-              <div
-                key={plan.name}
-                className={`relative flex flex-col rounded-2xl border ${
-                  plan.name === "Gold"
-                    ? "border-accent-400 bg-gradient-to-b from-accent-600 to-stone-900 shadow-2xl shadow-accent-500/20 md:scale-[1.02]"
-                    : "border-stone-700 bg-stone-800/80"
-                } p-6 sm:p-7`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.16em] text-stone-400">
-                      {plan.name} Plan
-                    </p>
-                    <p className="mt-2 text-2xl font-semibold text-white">
-                      {plan.price}
-                      {plan.period && (
-                        <span className="text-sm font-normal text-stone-400">
-                          {plan.period}
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-stone-800/80 px-3 py-1 text-[11px] font-medium text-stone-100">
-                    {plan.badge}
-                  </span>
-                </div>
-                <p className="mt-3 text-xs sm:text-sm text-stone-300">{plan.desc}</p>
-                <ul className="mt-5 flex-1 space-y-2.5 text-xs sm:text-sm text-stone-200">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2">
-                      <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 text-accent-400" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/contact"
-                  className={`mt-6 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-xs font-semibold tracking-wide ${
-                    plan.name === "Gold"
-                      ? "bg-white text-stone-950 hover:bg-stone-100"
-                      : "bg-stone-800 text-stone-50 hover:bg-stone-700"
-                  }`}
-                >
-                  Talk to us about {plan.name}
-                </Link>
-              </div>
-            ))}
-          </div>
+          <PlansSection />
         </div>
       </section>
 
