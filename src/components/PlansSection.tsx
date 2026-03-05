@@ -91,51 +91,57 @@ export default function PlansSection() {
       setLoading(true);
       setError(null);
 
-      const { data: tierRows, error: tierError } = await supabase
-        .from("subscription_tiers")
-        .select("id, name, description, is_custom, is_active")
-        .eq("is_active", true)
-        .order("name", { ascending: true });
+      try {
+        const { data: tierRows, error: tierError } = await supabase
+          .from("subscription_tiers")
+          .select("id, name, description, is_custom, is_active")
+          .eq("is_active", true)
+          .order("name", { ascending: true });
 
-      if (tierError) {
-        setError("We’re updating our subscription plans. Please check back shortly.");
+        if (tierError) {
+          setError(
+            "We're updating our subscription plans. Please check back shortly or contact us for pricing.",
+          );
+          return;
+        }
+
+        const tiersData = (tierRows ?? []) as SubscriptionTier[];
+        if (tiersData.length === 0) {
+          setTiers([]);
+          return;
+        }
+
+        const tierIds = tiersData.map((t) => t.id);
+
+        const { data: priceRows, error: priceError } = await supabase
+          .from("subscription_tier_prices")
+          .select("id, tier_id, city, amount, currency, is_active")
+          .in("tier_id", tierIds)
+          .eq("is_active", true);
+
+        if (priceError) {
+          setError(
+            "We're updating our subscription plans. Please check back shortly or contact us for pricing.",
+          );
+          return;
+        }
+
+        const pricesData = (priceRows ?? []) as SubscriptionTierPrice[];
+        const merged: TierWithPrices[] = tiersData.map((t) => ({
+          ...t,
+          prices: pricesData.filter((p) => p.tier_id === t.id),
+        }));
+        setTiers(merged);
+      } catch {
+        setError(
+          "We're updating our subscription plans. Please check back shortly or contact us for pricing.",
+        );
+      } finally {
         setLoading(false);
-        return;
       }
-
-      const tiersData = (tierRows ?? []) as SubscriptionTier[];
-      if (tiersData.length === 0) {
-        setTiers([]);
-        setLoading(false);
-        return;
-      }
-
-      const tierIds = tiersData.map((t) => t.id);
-
-      const { data: priceRows, error: priceError } = await supabase
-        .from("subscription_tier_prices")
-        .select("id, tier_id, city, amount, currency, is_active")
-        .in("tier_id", tierIds)
-        .eq("is_active", true);
-
-      if (priceError) {
-        setError("We’re updating our subscription plans. Please check back shortly.");
-        setLoading(false);
-        return;
-      }
-
-      const pricesData = (priceRows ?? []) as SubscriptionTierPrice[];
-
-      const merged: TierWithPrices[] = tiersData.map((t) => ({
-        ...t,
-        prices: pricesData.filter((p) => p.tier_id === t.id),
-      }));
-
-      setTiers(merged);
-      setLoading(false);
     }
 
-    load();
+    void load();
   }, []);
 
   if (loading && !tiers.length) {
