@@ -20,17 +20,20 @@ export default function DashboardPage() {
       return;
     }
 
-    supabase.auth
-      .getUser()
-      .then(({ data: { user } }) => {
-        setUser(user ?? null);
-      })
-      .catch(() => {
+    async function loadUser() {
+      try {
+        const { data } = await supabase.auth.getUser();
+        const currentUser = (data as { user: { email?: string } | null } | null)
+          ?.user;
+        setUser(currentUser ?? null);
+      } catch {
         setError("We couldn’t load your account details. Please try again.");
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    }
+
+    void loadUser();
   }, []);
 
   if (loading) {
