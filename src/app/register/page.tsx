@@ -28,6 +28,14 @@ export default function RegisterPage() {
     }
 
     const supabase = createClient();
+    if (!supabase) {
+      setLoading(false);
+      setError(
+        "Registration is temporarily unavailable while we update our systems. Please try again shortly.",
+      );
+      return;
+    }
+
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,

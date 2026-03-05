@@ -21,6 +21,14 @@ export default function LoginPage() {
     const password = formData.get("password") as string;
 
     const supabase = createClient();
+    if (!supabase) {
+      setLoading(false);
+      setError(
+        "Login is temporarily unavailable while we update our systems. Please try again shortly.",
+      );
+      return;
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,

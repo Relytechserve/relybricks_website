@@ -7,19 +7,44 @@ import { createClient } from "@/lib/supabase";
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<{ email?: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user ?? null);
+
+    if (!supabase) {
+      setError(
+        "The owner dashboard is temporarily unavailable while we update our systems. Please try again shortly.",
+      );
       setLoading(false);
-    });
+      return;
+    }
+
+    supabase.auth
+      .getUser()
+      .then(({ data: { user } }) => {
+        setUser(user ?? null);
+      })
+      .catch(() => {
+        setError("We couldn’t load your account details. Please try again.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
         <p className="text-stone-600">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <p className="text-stone-600 text-center max-w-md">{error}</p>
       </div>
     );
   }

@@ -79,6 +79,14 @@ export default function PlansSection() {
   useEffect(() => {
     const supabase = createClient();
 
+    if (!supabase) {
+      setError(
+        "We’re updating our subscription plans. Please check back shortly or contact us for pricing.",
+      );
+      setLoading(false);
+      return;
+    }
+
     async function load() {
       setLoading(true);
       setError(null);
