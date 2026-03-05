@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { DM_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
+
+const GA_MEASUREMENT_ID = "G-5TQW60DTGZ";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -41,6 +44,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${sora.variable} antialiased`}>
       <body className="min-h-screen flex flex-col font-sans bg-white text-stone-800 overflow-x-hidden">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
         <Navigation />
         <main className="flex-1 w-full min-w-0">{children}</main>
         <Footer />

@@ -7,8 +7,8 @@ import {
   BuildingOffice2Icon,
   MapIcon,
   SparklesIcon,
-  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
+import PlansSection from "@/components/PlansSection";
 
 const pillars = [
   {
@@ -40,48 +40,6 @@ const pillars = [
     icon: SparklesIcon,
     title: "Pay-and-use & value-added services",
     body: "AC servicing, plumbing, electricals and more through our curated partner network.",
-  },
-];
-
-const packages = [
-  {
-    name: "Basic",
-    tag: "Up to 1000 sq. ft",
-    price: "₹16,000 / year",
-    bestFor: "Apartments and compact homes",
-    highlights: [
-      "Paying utility bills & property taxes",
-      "Tenant management, agreements and rent collection",
-      "1× general cleaning + 1× pest control per year",
-      "2 property visits with photo/video updates",
-      "Pay-and-use services worth ₹1,000",
-    ],
-  },
-  {
-    name: "Gold",
-    tag: "Up to 1500 sq. ft · Most popular",
-    price: "₹25,000 / year",
-    bestFor: "NRIs and families with larger homes",
-    highlights: [
-      "Everything in Basic package",
-      "2× general cleaning + 2× pest control per year",
-      "Quarterly visits and reports",
-      "Pay-and-use services worth ₹2,000",
-      "Account manager and priority coordination",
-    ],
-  },
-  {
-    name: "Premium",
-    tag: "Up to 2000 sq. ft & estates",
-    price: "Custom · from ₹35,400 / year",
-    bestFor: "Bungalows, beach houses and combined properties",
-    highlights: [
-      "Everything in Gold package",
-      "General + deep cleaning included",
-      "6 visits per year with detailed reports",
-      "Pay-and-use services worth ₹3,000",
-      "Pick-up & drop for one owner visit (within 50 km)",
-    ],
   },
 ];
 
@@ -175,51 +133,7 @@ export default function ServicesPage() {
                 </p>
               </div>
 
-              <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
-              {packages.map((pkg) => (
-                <div
-                  key={pkg.name}
-                  className={`relative flex flex-col rounded-2xl border p-6 sm:p-7 ${
-                    pkg.name === "Gold"
-                      ? "border-accent-400 bg-gradient-to-b from-accent-600 to-stone-900 shadow-2xl shadow-accent-500/20 md:scale-[1.02]"
-                      : "border-stone-700 bg-stone-800/80"
-                  } ${pkg.name === "Gold" ? "text-white" : "text-white"}`}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-xs uppercase tracking-[0.16em] text-stone-400">
-                        {pkg.name} Plan
-                      </p>
-                      <p className="mt-2 text-2xl font-semibold text-white">
-                        {pkg.price}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-stone-800/80 px-3 py-1 text-[11px] font-medium text-stone-100 shrink-0">
-                      {pkg.tag}
-                    </span>
-                  </div>
-                  <p className="mt-3 text-xs sm:text-sm text-stone-300">{pkg.bestFor}</p>
-                  <ul className="mt-5 flex-1 space-y-2.5 text-xs sm:text-sm text-stone-200">
-                    {pkg.highlights.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 text-accent-400 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/contact"
-                    className={`mt-6 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-xs font-semibold tracking-wide ${
-                      pkg.name === "Gold"
-                        ? "bg-white text-stone-950 hover:bg-stone-100"
-                        : "bg-stone-800 text-stone-50 hover:bg-stone-700"
-                    }`}
-                  >
-                    Talk to us about {pkg.name}
-                  </Link>
-                </div>
-              ))}
-            </div>
+              <PlansSection />
 
               <p className="mt-10 text-center text-xs sm:text-sm text-stone-400">
                 Need a custom combination or have a mixed portfolio (apartments + land)? We
