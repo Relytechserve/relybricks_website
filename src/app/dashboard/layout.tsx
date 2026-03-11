@@ -59,16 +59,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     void guardDashboardRoute();
   }, [router]);
 
-  async function handleSignOut() {
-    const supabase = createClient();
-    if (!supabase) {
-      return;
-    }
-
-    await supabase.auth.signOut();
-    router.push("/login");
-  }
-
   if (checkingAuth) {
     return (
       <section className="py-10">
@@ -82,23 +72,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <section className="py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-stone-900">Customer portal</h1>
-            <p className="mt-1 text-stone-600">
-              Track your property, documents, updates, and support in one place.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => void handleSignOut()}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 transition-colors"
-          >
-            Sign out
-          </button>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-semibold text-stone-900">Customer portal</h1>
+          <p className="text-sm text-stone-600">
+            Track your property, documents, updates, and support in one place.
+          </p>
         </div>
 
-        <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
+        <div className="mt-6 flex flex-wrap gap-2">
           {dashboardLinks.map((link) => {
             const isActive = pathname === link.href;
             return (

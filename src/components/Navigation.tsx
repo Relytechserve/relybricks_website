@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase";
 import Logo from "./Logo";
@@ -17,6 +18,7 @@ export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authReady, setAuthReady] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const supabase = createClient();
@@ -44,6 +46,14 @@ export default function Navigation() {
     return () => subscription.unsubscribe();
   }, []);
 
+  async function handleSignOut() {
+    const supabase = createClient();
+    if (!supabase) return;
+    await supabase.auth.signOut();
+    setIsLoggedIn(false);
+    router.push("/login");
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,12 +74,21 @@ export default function Navigation() {
             ))}
             {authReady &&
               (isLoggedIn ? (
-                <Link
-                  href="/dashboard"
-                  className="px-6 py-3 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-colors shadow-lg shadow-accent-500/25"
-                >
-                  Customer Portal
-                </Link>
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => void handleSignOut()}
+                    className="text-sm text-stone-500 hover:text-stone-900"
+                  >
+                    Sign out
+                  </button>
+                  <Link
+                    href="/dashboard"
+                    className="px-6 py-3 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-colors shadow-lg shadow-accent-500/25"
+                  >
+                    Customer Portal
+                  </Link>
+                </div>
               ) : (
                 <Link
                   href="/login"
@@ -126,13 +145,25 @@ export default function Navigation() {
               ))}
               {authReady &&
                 (isLoggedIn ? (
-                  <Link
-                    href="/dashboard"
-                    className="mt-2 py-3 px-4 bg-accent-600 text-white font-semibold rounded-xl text-center"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Customer Portal
-                  </Link>
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="mt-2 py-3 px-4 bg-accent-600 text-white font-semibold rounded-xl text-center"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Customer Portal
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void handleSignOut();
+                        setMobileOpen(false);
+                      }}
+                      className="py-3 text-sm text-stone-600 hover:text-stone-900 font-medium text-center"
+                    >
+                      Sign out
+                    </button>
+                  </>
                 ) : (
                   <Link
                     href="/login"
