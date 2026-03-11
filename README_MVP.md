@@ -35,11 +35,15 @@ npm run dev
 ```bash
 cd relybricks-admin
 npm install
-# Add .env.local with same Supabase keys
+cp .env.example .env.local
+# Edit .env.local with Supabase keys (see below)
 npm run dev
 ```
 
-Runs on port 3000 by default. Dashboard and Customers pages coming next.
+Runs on port 3003 by default.
+
+**Required for customer login setup/reset:** Add `SUPABASE_SERVICE_ROLE_KEY` to `.env.local`.  
+Get it from Supabase Dashboard > Settings > API > `service_role` key (keep this secret).
 
 ## 4. Folder Structure
 

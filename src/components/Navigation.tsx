@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase";
 import Logo from "./Logo";
 
 const navLinks = [
@@ -13,6 +14,32 @@ const navLinks = [
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) {
+      setAuthReady(true);
+      return;
+    }
+
+    async function loadSession() {
+      const { data } = await supabase.auth.getSession();
+      setIsLoggedIn(Boolean(data.session));
+      setAuthReady(true);
+    }
+
+    void loadSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(Boolean(session));
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm">
@@ -32,12 +59,22 @@ export default function Navigation() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/contact"
-              className="px-6 py-3 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-colors shadow-lg shadow-accent-500/25"
-            >
-              Get Started
-            </Link>
+            {authReady &&
+              (isLoggedIn ? (
+                <Link
+                  href="/dashboard"
+                  className="px-6 py-3 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-colors shadow-lg shadow-accent-500/25"
+                >
+                  Customer Portal
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-6 py-3 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-colors shadow-lg shadow-accent-500/25"
+                >
+                  Customer Login
+                </Link>
+              ))}
           </div>
 
           <button
@@ -84,13 +121,24 @@ export default function Navigation() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/contact"
-                className="mt-2 py-3 px-4 bg-accent-600 text-white font-semibold rounded-xl text-center"
-                onClick={() => setMobileOpen(false)}
-              >
-                Get Started
-              </Link>
+              {authReady &&
+                (isLoggedIn ? (
+                  <Link
+                    href="/dashboard"
+                    className="mt-2 py-3 px-4 bg-accent-600 text-white font-semibold rounded-xl text-center"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Customer Portal
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="mt-2 py-3 px-4 bg-accent-600 text-white font-semibold rounded-xl text-center"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Customer Login
+                  </Link>
+                ))}
             </div>
           </div>
         )}

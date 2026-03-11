@@ -29,7 +29,7 @@ export default function LoginPage() {
       return;
     }
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -38,6 +38,33 @@ export default function LoginPage() {
 
     if (signInError) {
       setError(signInError.message);
+      return;
+    }
+
+    const signedInUser = signInData.user;
+    if (!signedInUser) {
+      setError("Unable to verify your account. Please try again.");
+      await supabase.auth.signOut();
+      return;
+    }
+
+    const [profileRes, customerRes] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("role, customer_id")
+        .eq("user_id", signedInUser.id)
+        .maybeSingle(),
+      supabase.from("customers").select("id").eq("auth_user_id", signedInUser.id).maybeSingle(),
+    ]);
+
+    const isCustomerRole = profileRes.data?.role === "customer";
+    const hasCustomerRecord = Boolean(customerRes.data?.id);
+    const profileLinked =
+      !profileRes.data?.customer_id || profileRes.data.customer_id === customerRes.data?.id;
+
+    if (!isCustomerRole || !hasCustomerRecord || !profileLinked) {
+      await supabase.auth.signOut();
+      setError("This account is not authorized for the customer portal. Please contact support.");
       return;
     }
 
@@ -98,12 +125,9 @@ export default function LoginPage() {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-stone-600">
-          New customer?{" "}
-          <Link
-            href="/register"
-            className="text-accent-600 hover:underline font-medium"
-          >
-            Create account
+          Need access?{" "}
+          <Link href="/contact" className="text-accent-600 hover:underline font-medium">
+            Contact RelyBricks team
           </Link>
         </p>
       </div>
