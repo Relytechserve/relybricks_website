@@ -662,10 +662,10 @@ export default function HomePage() {
       </a>
       {/* Mobile: compact full-width button near bottom */}
       <a
-        href="tel:+919952004948"
+        href="https://wa.me/919952004948"
         onClick={() => trackCallClick("floating_mobile")}
-        className="sm:hidden fixed inset-x-4 bottom-5 z-40 flex items-center justify-center rounded-full bg-accent-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-500/30 hover:bg-accent-700 transition-colors"
-        aria-label="Call RelyBricks now"
+        className="sm:hidden fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-accent-600 text-white shadow-lg shadow-accent-500/30 hover:bg-accent-700 transition-colors"
+        aria-label="WhatsApp call RelyBricks now"
       >
         <PhoneIcon className="h-5 w-5" />
       </a>
