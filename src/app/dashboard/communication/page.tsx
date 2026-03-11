@@ -54,7 +54,7 @@ export default function CommunicationPage() {
         const user = (userData as { user: { id: string } | null } | null)?.user;
         if (!user) {
           setProfile(null);
-          setUpdates([]);
+          setTimeline([]);
           return;
         }
 
