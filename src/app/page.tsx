@@ -1,3 +1,7 @@
+"use client";
+
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -10,6 +14,7 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 import PlansSection from "@/components/PlansSection";
+import { Tiles } from "@/components/ui/tiles";
 
 const heroImage = "https://images.pexels.com/photos/29750117/pexels-photo-29750117.jpeg?auto=compress&w=1200";
 const propertyCardImage = "https://images.pexels.com/photos/5759269/pexels-photo-5759269.jpeg?auto=compress&w=600";
@@ -105,17 +110,30 @@ const testimonials = [
   },
 ];
 
+function trackCallClick(source: string) {
+  if (typeof window === "undefined") return;
+  const w = window as typeof window & { gtag?: (...args: unknown[]) => void };
+  if (typeof w.gtag === "function") {
+    w.gtag("event", "call_now_click", {
+      event_category: "engagement",
+      event_label: source,
+    });
+  }
+}
+
 export default function HomePage() {
   return (
-    <div className="bg-white w-full min-w-0">
+    <div className="relative bg-white w-full min-w-0">
+      <div className="relative z-10">
       {/* HERO – Bright, modern */}
       <section className="relative overflow-hidden bg-gradient-to-b from-stone-50 to-white">
+        <Tiles rows={28} cols={10} tileSize="md" className="opacity-60" />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -left-40 top-[-120px] h-96 w-96 rounded-full bg-accent-100/60 blur-3xl" />
           <div className="absolute right-[-80px] bottom-[-80px] h-80 w-80 rounded-full bg-accent-200/40 blur-3xl" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2.5fr)] gap-12 lg:gap-16 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2.5fr)] gap-8 lg:gap-12 items-start lg:items-center">
           {/* Left – story and CTAs */}
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-1.5 text-xs font-medium text-stone-600 shadow-sm">
@@ -143,6 +161,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-4">
               <a
                 href="tel:+919952004948"
+                onClick={() => trackCallClick("hero_primary")}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-accent-500/25 hover:bg-accent-700 transition-colors"
               >
                 <PhoneIcon className="h-4 w-4" />
@@ -190,7 +209,7 @@ export default function HomePage() {
                 alt="Modern residential property - RelyBricks Chennai"
                 width={1200}
                 height={800}
-                className="w-full h-auto min-h-[220px] object-cover"
+                className="w-full h-64 md:h-72 object-cover"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 via-transparent to-transparent" />
@@ -326,53 +345,54 @@ export default function HomePage() {
       </section>
 
       {/* WHY RELYBRICKS */}
-      <section className="py-16 lg:py-24 bg-stone-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.2fr_1.1fr] gap-14 items-center">
+      <section className="py-12 lg:py-20 bg-stone-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.1fr_1.1fr] gap-10 lg:gap-12 items-start lg:items-center">
           <div className="relative order-2 lg:order-1 overflow-hidden rounded-2xl shadow-xl ring-1 ring-stone-200/50">
             <Image
               src={whySectionImage}
               alt="Property management - trusted care for your home"
               width={800}
               height={500}
-              className="w-full h-auto object-cover"
+              className="w-full h-72 md:h-80 object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white/30 via-transparent to-transparent" />
           </div>
-          <div className="order-1 lg:order-2">
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-stone-950 tracking-tight">
-              Built by homeowners{" "}
-              <span className="text-stone-500">&nbsp;who moved abroad.</span>
-            </h2>
-            <p className="mt-5 text-sm sm:text-base text-stone-600 leading-relaxed">
-              RelyBricks Property Management was born out of a simple but important
-              frustration: managing homes in Chennai from far away, coordinating with
-              busy friends and elderly parents, and worrying about floods, maintenance
-              and tenants. Instead of patchwork fixes, we created a reliable,
-              innovative and tech-enabled property management partner.
-            </p>
-            <p className="mt-4 text-sm sm:text-base text-stone-600 leading-relaxed">
-              Today, we support homeowners with subscription plans that cover
-              everything—from bill payments and cleaning to tenant management,
-              emergency services and sale preparation—backed by clear communication
-              and structured reporting.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm">
-            {stats.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4 shadow-sm"
-              >
-                <p className="text-[11px] uppercase tracking-[0.16em] text-stone-500">
-                  {item.label}
-                </p>
-                <p className="mt-2 text-xl font-semibold text-stone-950">
-                  {item.value}
-                </p>
-                <p className="mt-1 text-[11px] text-stone-600">{item.hint}</p>
-              </div>
-            ))}
+          <div className="order-1 lg:order-2 max-w-xl flex flex-col gap-6">
+            <div>
+              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-stone-950 tracking-tight">
+                Built by homeowners{" "}
+                <span className="text-stone-500">&nbsp;who moved abroad.</span>
+              </h2>
+              <p className="mt-5 text-sm sm:text-base text-stone-600 leading-relaxed">
+                RelyBricks Property Management was born out of a simple but important
+                frustration: managing homes in Chennai from far away, coordinating with
+                busy friends and elderly parents, and worrying about floods, maintenance
+                and tenants. Instead of patchwork fixes, we created a reliable,
+                innovative and tech-enabled property management partner.
+              </p>
+              <p className="mt-4 text-sm sm:text-base text-stone-600 leading-relaxed">
+                Today, we support homeowners with subscription plans that cover
+                everything—from bill payments and cleaning to tenant management,
+                emergency services and sale preparation—backed by clear communication
+                and structured reporting.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm">
+              {stats.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4 shadow-sm"
+                >
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-stone-500">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 text-xl font-semibold text-stone-950">
+                    {item.value}
+                  </p>
+                  <p className="mt-1 text-[11px] text-stone-600">{item.hint}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -614,6 +634,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-3 text-sm">
             <a
               href="tel:+919952004948"
+              onClick={() => trackCallClick("final_cta")}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-accent-600 hover:bg-accent-50 transition-colors"
             >
               <PhoneIcon className="h-4 w-4" />
@@ -628,6 +649,27 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Floating call CTA */}
+      {/* Desktop / tablet: pill in bottom-right */}
+      <a
+        href="tel:+919952004948"
+        onClick={() => trackCallClick("floating_desktop")}
+        className="hidden sm:inline-flex fixed bottom-5 right-5 z-40 items-center justify-center gap-2 rounded-full bg-accent-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-500/30 hover:bg-accent-700 transition-colors"
+      >
+        <PhoneIcon className="h-4 w-4" />
+        <span>Call now</span>
+      </a>
+      {/* Mobile: compact full-width button near bottom */}
+      <a
+        href="tel:+919952004948"
+        onClick={() => trackCallClick("floating_mobile")}
+        className="sm:hidden fixed inset-x-4 bottom-5 z-40 flex items-center justify-center rounded-full bg-accent-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-500/30 hover:bg-accent-700 transition-colors"
+        aria-label="Call RelyBricks now"
+      >
+        <PhoneIcon className="h-5 w-5" />
+      </a>
+      </div>
     </div>
   );
 }

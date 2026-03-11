@@ -47,16 +47,16 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-24 lg:py-32 bg-stone-50">
+      <section className="py-16 lg:py-24 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
             <div className="relative order-2 lg:order-1 overflow-hidden rounded-2xl shadow-xl ring-1 ring-stone-200/50">
               <Image
                 src="https://images.pexels.com/photos/1438834/pexels-photo-1438834.jpeg?auto=compress&w=800"
                 alt="Trusted property management - RelyBricks"
                 width={800}
                 height={600}
-                className="w-full h-auto object-cover"
+                className="w-full h-72 md:h-80 object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-white/20 via-transparent to-transparent" />
             </div>
