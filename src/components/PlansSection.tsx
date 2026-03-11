@@ -202,10 +202,12 @@ export default function PlansSection() {
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-[0.16em] text-stone-400">
-                  {tier.name} Plan
+                <p className="text-xs uppercase tracking-[0.16em]">
+                  <span className="inline-flex rounded-full bg-gradient-to-r from-stone-900 to-stone-700 px-3 py-1 text-[10px] font-semibold text-accent-200 shadow-sm border border-stone-500/40">
+                    {tier.name} Plan
+                  </span>
                 </p>
-                <div className="mt-3 space-y-1 text-xs text-stone-200">
+                <div className="mt-3 space-y-1 text-xs text-stone-100">
                   {isCustomOrPremium ? (
                     <p className="text-stone-200">
                       Contact us for pricing in Chennai, Bangalore and other cities.
@@ -225,7 +227,7 @@ export default function PlansSection() {
                         </p>
                       )}
                       {!chennaiPrice && !bangalorePrice && (
-                        <p className="text-stone-300">
+                        <p className="text-stone-100">
                           City-based pricing available on request.
                         </p>
                       )}
@@ -237,8 +239,8 @@ export default function PlansSection() {
                 {copy.badge}
               </span>
             </div>
-            <p className="mt-3 text-xs sm:text-sm text-stone-300">{copy.desc}</p>
-            <ul className="mt-5 flex-1 space-y-2.5 text-xs sm:text-sm text-stone-200">
+            <p className="mt-3 text-xs sm:text-sm text-stone-100">{copy.desc}</p>
+            <ul className="mt-5 flex-1 space-y-2.5 text-xs sm:text-sm text-white">
               {copy.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2">
                   <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 text-accent-400" />

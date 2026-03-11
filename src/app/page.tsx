@@ -326,7 +326,7 @@ export default function HomePage() {
       </section>
 
       {/* WHY RELYBRICKS */}
-      <section className="py-20 lg:py-28 bg-stone-50">
+      <section className="py-16 lg:py-24 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.2fr_1.1fr] gap-14 items-center">
           <div className="relative order-2 lg:order-1 overflow-hidden rounded-2xl shadow-xl ring-1 ring-stone-200/50">
             <Image
@@ -378,7 +378,7 @@ export default function HomePage() {
       </section>
 
       {/* SERVICES */}
-      <section className="py-20 lg:py-28 bg-stone-50">
+      <section className="py-16 lg:py-24 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
@@ -480,7 +480,7 @@ export default function HomePage() {
       </section>
 
       {/* PROCESS */}
-      <section className="py-20 lg:py-28 bg-white">
+      <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
@@ -516,33 +516,30 @@ export default function HomePage() {
       </section>
 
       {/* PRICING */}
-      <section className="py-20 lg:py-28 bg-stone-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">
-                PLANS
-              </p>
-              <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-white tracking-tight">
-                Simple, transparent subscriptions.
-              </h2>
-              <p className="mt-3 text-sm sm:text-base text-stone-300 max-w-xl">
-                Annual subscription plans starting from ₹16,000/year. No hidden
-                commissions—just clear scope, reporting and SLAs.
-              </p>
-            </div>
-            <p className="text-xs sm:text-sm text-stone-400 max-w-sm">
-              Gold is our most popular plan for NRIs managing 1500+ sq. ft homes, villas
-              and multiple properties.
-            </p>
-          </div>
-
+      <section className="py-12 lg:py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">
+            PLANS
+          </p>
+          <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
+            Simple, transparent subscriptions.
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-stone-700">
+            Annual subscription plans starting from ₹16,000/year. No hidden
+            commissions—just clear scope, reporting and SLAs.
+          </p>
+          <p className="mt-4 text-xs sm:text-sm text-stone-600">
+            Gold is our most popular plan for NRIs managing 1500+ sq. ft homes, villas
+            and multiple properties.
+          </p>
+        </div>
+        <div className="mt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <PlansSection />
         </div>
       </section>
 
       {/* SOCIAL PROOF */}
-      <section className="py-20 lg:py-28 bg-white">
+      <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
@@ -602,7 +599,7 @@ export default function HomePage() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-accent-600 to-accent-800 text-white">
+      <section className="py-16 lg:py-24 bg-gradient-to-br from-accent-600 to-accent-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
           <div>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight">
