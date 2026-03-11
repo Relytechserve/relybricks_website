@@ -17,11 +17,28 @@ type PropertyUpdate = {
   created_at: string;
 };
 
+type CustomerNote = {
+  id: string;
+  body: string;
+  is_customer_visible: boolean;
+  author_email: string | null;
+  created_at: string | null;
+};
+
+type TimelineItem = {
+  id: string;
+  kind: "update" | "note";
+  title: string;
+  body: string;
+  created_at: string;
+  meta?: string | null;
+};
+
 export default function CommunicationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [profile, setProfile] = useState<CommunicationProfile | null>(null);
-  const [updates, setUpdates] = useState<PropertyUpdate[]>([]);
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -49,19 +66,51 @@ export default function CommunicationPage() {
 
         if (!customer) {
           setProfile(null);
-          setUpdates([]);
+          setTimeline([]);
           return;
         }
 
-        const { data: updateData } = await supabase
-          .from("property_updates")
-          .select("id, title, body, created_at")
-          .eq("customer_id", customer.id)
-          .order("created_at", { ascending: false })
-          .limit(6);
+        const [{ data: updateData }, { data: notesData }] = await Promise.all([
+          supabase
+            .from("property_updates")
+            .select("id, title, body, created_at")
+            .eq("customer_id", customer.id)
+            .order("created_at", { ascending: false })
+            .limit(10),
+          supabase
+            .from("customer_notes")
+            .select("id, body, is_customer_visible, author_email, created_at")
+            .eq("customer_id", customer.id)
+            .eq("is_customer_visible", true)
+            .order("created_at", { ascending: false })
+            .limit(10),
+        ]);
+
+        const updatesItems: TimelineItem[] =
+          (updateData as PropertyUpdate[] | null)?.map((update) => ({
+            id: update.id,
+            kind: "update",
+            title: update.title,
+            body: update.body ?? "No additional details shared.",
+            created_at: update.created_at,
+          })) ?? [];
+
+        const noteItems: TimelineItem[] =
+          (notesData as CustomerNote[] | null)?.map((note) => ({
+            id: note.id,
+            kind: "note",
+            title: "Note from RelyBricks team",
+            body: note.body,
+            created_at: note.created_at ?? new Date().toISOString(),
+            meta: note.author_email,
+          })) ?? [];
+
+        const merged = [...updatesItems, ...noteItems].sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
 
         setProfile(customer);
-        setUpdates(updateData ?? []);
+        setTimeline(merged);
       } catch {
         setError("Unable to load communication details.");
       } finally {
@@ -173,21 +222,33 @@ export default function CommunicationPage() {
 
       <section className="mt-6 p-6 rounded-2xl border border-stone-200 bg-white">
         <h2 className="font-semibold text-stone-900">Recent timeline</h2>
-        {updates.length === 0 ? (
+        {timeline.length === 0 ? (
           <p className="mt-3 text-sm text-stone-500">No communication timeline entries yet.</p>
         ) : (
           <ul className="mt-4 space-y-3">
-            {updates.map((update) => (
-              <li key={update.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0">
+            {timeline.map((item) => (
+              <li key={item.id} className="pb-3 border-b border-stone-100 last:border-0 last:pb-0">
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="font-medium text-stone-900">{update.title}</p>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                        item.kind === "note"
+                          ? "bg-blue-50 text-blue-700 border border-blue-100"
+                          : "bg-stone-100 text-stone-700 border border-stone-200"
+                      }`}
+                    >
+                      {item.kind === "note" ? "Note" : "Update"}
+                    </span>
+                    <p className="font-medium text-stone-900">{item.title}</p>
+                  </div>
                   <span className="text-xs text-stone-500">
-                    {new Date(update.created_at).toLocaleString("en-IN")}
+                    {new Date(item.created_at).toLocaleString("en-IN")}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-stone-600">
-                  {update.body ?? "No additional details shared."}
-                </p>
+                <p className="mt-1 text-sm text-stone-600">{item.body}</p>
+                {item.kind === "note" && item.meta && (
+                  <p className="mt-1 text-xs text-stone-500">From: {item.meta}</p>
+                )}
               </li>
             ))}
           </ul>

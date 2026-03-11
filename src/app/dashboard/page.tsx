@@ -36,6 +36,22 @@ type DashboardData = {
   transactions: Transaction[];
 };
 
+function extractFirstName(fullName: string | null | undefined, fallback: string | undefined) {
+  if (!fullName) {
+    return fallback ?? "there";
+  }
+  const cleaned = fullName.trim().replace(/\s+/g, " ");
+  if (!cleaned) return fallback ?? "there";
+  const parts = cleaned.split(" ");
+  const titles = new Set(["mr", "mr.", "mrs", "mrs.", "ms", "ms.", "dr", "dr."]);
+  let firstIndex = 0;
+  if (parts.length > 1 && titles.has(parts[0].toLowerCase())) {
+    firstIndex = 1;
+  }
+  const first = parts[firstIndex] ?? "";
+  return first || fallback || "there";
+}
+
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
@@ -152,7 +168,10 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-stone-900">Welcome back, {user.email}</h2>
+      <h2 className="text-xl font-semibold text-stone-900">
+        Welcome back,{" "}
+        {extractFirstName(data.customer?.name, user.email)}
+      </h2>
       <p className="mt-1 text-stone-600">
         This is your single view for property management, documents, and communication.
       </p>
