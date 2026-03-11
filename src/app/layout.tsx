@@ -5,6 +5,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
+import LayoutShell from "@/components/LayoutShell";
 
 const GA_MEASUREMENT_ID = "G-5TQW60DTGZ";
 
@@ -56,10 +57,12 @@ export default function RootLayout({
             gtag('config', '${GA_MEASUREMENT_ID}');
           `}
         </Script>
-        <Navigation />
-        <main className="flex-1 w-full min-w-0">{children}</main>
-        <Footer />
-        <CookieConsent />
+        <LayoutShell>
+          <Navigation />
+          <main className="flex-1 w-full min-w-0">{children}</main>
+          <Footer />
+          <CookieConsent />
+        </LayoutShell>
       </body>
     </html>
   );
