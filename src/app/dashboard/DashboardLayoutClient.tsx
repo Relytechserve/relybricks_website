@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase";
 
 const dashboardLinks = [
   { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/property", label: "Property" },
+  { href: "/dashboard/property", label: "Properties" },
   { href: "/dashboard/documents", label: "Documents" },
   { href: "/dashboard/updates", label: "Updates" },
   { href: "/dashboard/communication", label: "Communication" },
@@ -75,7 +75,7 @@ export default function DashboardLayoutClient({ children }: { children: ReactNod
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-semibold text-stone-900">Customer portal</h1>
           <p className="text-sm text-stone-600">
-            Track your property, documents, updates, and support in one place.
+            Track your properties, documents, updates, and support in one place.
           </p>
         </div>
 

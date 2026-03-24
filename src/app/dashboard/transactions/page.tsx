@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { propertyDisplayTitle, type PortalPropertyRow } from "@/lib/portal-properties";
 
 type Transaction = {
   id: string;
@@ -9,12 +10,14 @@ type Transaction = {
   amount: number | null;
   description: string | null;
   date: string;
+  customer_property_id: string | null;
 };
 
 export default function TransactionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [properties, setProperties] = useState<PortalPropertyRow[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -30,6 +33,7 @@ export default function TransactionsPage() {
         const user = (userData as { user: { id: string } | null } | null)?.user;
         if (!user) {
           setTransactions([]);
+          setProperties([]);
           return;
         }
 
@@ -41,21 +45,32 @@ export default function TransactionsPage() {
 
         if (!customer) {
           setTransactions([]);
+          setProperties([]);
           return;
         }
 
-        const { data: transactionData, error: transactionError } = await supabase
-          .from("transactions")
-          .select("id, type, amount, description, date")
-          .eq("customer_id", customer.id)
-          .order("date", { ascending: false });
+        const customerId = (customer as { id: string }).id;
 
-        if (transactionError) {
+        const [txRes, propsRes] = await Promise.all([
+          supabase
+            .from("transactions")
+            .select("id, type, amount, description, date, customer_property_id")
+            .eq("customer_id", customerId)
+            .order("date", { ascending: false }),
+          supabase
+            .from("customer_properties")
+            .select("id, full_address, city, area, property_type, property_status, property_sqft")
+            .eq("customer_id", customerId)
+            .order("created_at", { ascending: true }),
+        ]);
+
+        if (txRes.error) {
           setError("Unable to load transactions.");
           return;
         }
 
-        setTransactions(transactionData ?? []);
+        setTransactions((txRes.data ?? []) as Transaction[]);
+        setProperties((propsRes.data ?? []) as PortalPropertyRow[]);
       } catch {
         setError("Unable to load transactions.");
       } finally {
@@ -66,6 +81,17 @@ export default function TransactionsPage() {
     void loadTransactions();
   }, []);
 
+  const propertyLabel = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const p of properties) {
+      map.set(p.id, propertyDisplayTitle(p));
+    }
+    return (id: string | null) => {
+      if (!id) return "All properties";
+      return map.get(id) ?? "Property";
+    };
+  }, [properties]);
+
   const totalPaid = useMemo(
     () =>
       transactions.reduce((total, item) => total + (item.amount ? Number(item.amount) : 0), 0),
@@ -75,7 +101,10 @@ export default function TransactionsPage() {
   return (
     <div>
       <h1 className="text-xl font-semibold text-stone-900">Transaction history</h1>
-      <p className="mt-2 text-stone-600">Renewals, payments, and related activity.</p>
+      <p className="mt-2 text-stone-600">
+        Renewals, payments, and related activity. Entries can be linked to a specific property when
+        your administrator records them.
+      </p>
 
       {loading ? (
         <p className="mt-6 text-sm text-stone-500">Loading transactions...</p>
@@ -93,10 +122,11 @@ export default function TransactionsPage() {
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white">
-            <table className="w-full min-w-[640px] text-left">
+            <table className="w-full min-w-[720px] text-left">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
                   <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Date</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Property</th>
                   <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Type</th>
                   <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Description</th>
                   <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase text-right">Amount</th>
@@ -107,6 +137,9 @@ export default function TransactionsPage() {
                   <tr key={transaction.id} className="border-b border-stone-100 last:border-0">
                     <td className="px-4 py-3 text-sm text-stone-700">
                       {new Date(transaction.date).toLocaleDateString("en-IN")}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-stone-700">
+                      {propertyLabel(transaction.customer_property_id)}
                     </td>
                     <td className="px-4 py-3 text-sm text-stone-700 capitalize">{transaction.type}</td>
                     <td className="px-4 py-3 text-sm text-stone-700">
