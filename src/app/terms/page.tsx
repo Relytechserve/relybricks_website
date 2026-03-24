@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Terms & Conditions | RelyBricks",
   description: "Terms and conditions of use for the RelyBricks website and property management services.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "Terms & Conditions | RelyBricks",
+    url: "/terms",
+  },
 };
 
 export default function TermsPage() {

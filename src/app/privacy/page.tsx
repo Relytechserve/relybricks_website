@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Privacy Policy | RelyBricks",
   description:
     "Privacy policy for RelyBricks - how we collect, use, and protect your personal data.",
+  alternates: { canonical: "/privacy" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Privacy Policy | RelyBricks",
+    url: "/privacy",
+  },
 };
 
 export default function PrivacyPage() {

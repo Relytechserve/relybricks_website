@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -43,10 +44,17 @@ const pillars = [
   },
 ];
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Services | RelyBricks - Property Management Chennai",
   description:
     "Tenant management, maintenance, interior design, buying & selling, land maintenance, and value-added services. Full-service property management in Chennai.",
+  alternates: { canonical: "/services" },
+  openGraph: {
+    title: "RelyBricks Services — Full Property Management Chennai",
+    description:
+      "Tenant lifecycle, maintenance, inspections, bills, and pay-as-you-go services—one accountable team.",
+    url: "/services",
+  },
 };
 
 export default function ServicesPage() {

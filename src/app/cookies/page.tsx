@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Cookie Policy | RelyBricks",
   description: "Cookie policy for RelyBricks - how we use cookies and similar technologies.",
+  alternates: { canonical: "/cookies" },
+  openGraph: {
+    title: "Cookie Policy | RelyBricks",
+    url: "/cookies",
+  },
 };
 
 export default function CookiePolicyPage() {

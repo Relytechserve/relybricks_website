@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
@@ -9,10 +10,17 @@ const values = [
   "Peace of mind for NRIs and out-of-station owners",
 ];
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "About Us | RelyBricks - Property Management Chennai",
   description:
     "RelyBricks was founded by homeowners who moved abroad. We provide trusted, professional property management in Chennai with digital solutions.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About RelyBricks — Property Management Chennai",
+    description:
+      "Built by homeowners for homeowners. Trusted, transparent property management with digital reporting.",
+    url: "/about",
+  },
 };
 
 export default function AboutPage() {
