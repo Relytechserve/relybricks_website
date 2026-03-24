@@ -65,9 +65,23 @@ function transactionPropertyLabel(
   propertyId: string | null,
   properties: PortalPropertyRow[],
 ): string {
-  if (!propertyId) return "All properties";
+  if (!propertyId) return "All properties (legacy)";
   const p = properties.find((x) => x.id === propertyId);
   return p ? propertyDisplayTitle(p) : "Property";
+}
+
+/** Prefer property-linked rows when the account has properties so the snapshot does not list duplicate legacy + property entries first. */
+function recentTransactionsForPortal(
+  rows: Transaction[],
+  properties: PortalPropertyRow[],
+  limit: number,
+): Transaction[] {
+  const hasProperties = properties.length > 0;
+  if (!hasProperties) return rows.slice(0, limit);
+  const linked = rows.filter((t) => t.customer_property_id != null);
+  const legacy = rows.filter((t) => t.customer_property_id == null);
+  if (linked.length === 0) return rows.slice(0, limit);
+  return [...linked, ...legacy].slice(0, limit);
 }
 
 export default function DashboardPage() {
@@ -148,7 +162,7 @@ export default function DashboardPage() {
             .select("id, type, amount, date, customer_property_id")
             .eq("customer_id", customerRow.id)
             .order("date", { ascending: false })
-            .limit(3),
+            .limit(12),
         ]);
 
         const properties = (propsRes.data ?? []) as PortalPropertyRow[];
@@ -377,7 +391,7 @@ export default function DashboardPage() {
             <p className="mt-3 text-sm text-stone-500">No transactions yet.</p>
           ) : (
             <ul className="mt-4 space-y-3">
-              {data.transactions.map((txn) => (
+              {recentTransactionsForPortal(data.transactions, data.properties, 3).map((txn) => (
                 <li key={txn.id} className="flex items-start justify-between gap-3 pb-3 border-b border-stone-100 last:border-0 last:pb-0">
                   <div>
                     <p className="font-medium capitalize text-stone-800">{txn.type}</p>

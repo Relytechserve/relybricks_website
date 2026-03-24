@@ -87,23 +87,39 @@ export default function TransactionsPage() {
       map.set(p.id, propertyDisplayTitle(p));
     }
     return (id: string | null) => {
-      if (!id) return "All properties";
+      if (!id) return "All properties (legacy)";
       return map.get(id) ?? "Property";
     };
   }, [properties]);
 
-  const totalPaid = useMemo(
-    () =>
-      transactions.reduce((total, item) => total + (item.amount ? Number(item.amount) : 0), 0),
-    [transactions],
-  );
+  /** When the account has property rows and at least one tx is linked to a property, legacy
+   *  rows (null customer_property_id) are excluded from the total and main table so the same
+   *  payment is not counted twice if it was also re-logged on a property. */
+  const { totalPaid, primaryRows, legacyRows, usingPropertyScopedTotals } = useMemo(() => {
+    const hasProperties = properties.length > 0;
+    const linked = transactions.filter((t) => t.customer_property_id != null);
+    const legacy = transactions.filter((t) => t.customer_property_id == null);
+    const useScoped = hasProperties && linked.length > 0;
+    const rowsForTotal = useScoped ? linked : transactions;
+    const total = rowsForTotal.reduce(
+      (sum, item) => sum + (item.amount ? Number(item.amount) : 0),
+      0,
+    );
+    return {
+      totalPaid: total,
+      primaryRows: useScoped ? linked : transactions,
+      legacyRows: useScoped ? legacy : [],
+      usingPropertyScopedTotals: useScoped,
+    };
+  }, [transactions, properties.length]);
 
   return (
     <div>
       <h1 className="text-xl font-semibold text-stone-900">Transaction history</h1>
       <p className="mt-2 text-stone-600">
-        Renewals, payments, and related activity. Entries can be linked to a specific property when
-        your administrator records them.
+        Renewals, payments, and related activity. When you have property records, amounts are totaled
+        from property-linked entries only so older &quot;account-wide&quot; rows do not double-count
+        the same payment.
       </p>
 
       {loading ? (
@@ -115,7 +131,14 @@ export default function TransactionsPage() {
       ) : (
         <div className="mt-8 space-y-5">
           <div className="p-5 rounded-2xl border border-stone-200 bg-white flex items-center justify-between">
-            <p className="text-sm text-stone-600">Total billed amount</p>
+            <div>
+              <p className="text-sm text-stone-600">Total billed amount</p>
+              {usingPropertyScopedTotals && legacyRows.length > 0 ? (
+                <p className="mt-1 text-xs text-stone-500">
+                  Based on property-linked entries only (see account-wide section below).
+                </p>
+              ) : null}
+            </div>
             <p className="text-lg font-semibold text-stone-900">
               INR {totalPaid.toLocaleString("en-IN")}
             </p>
@@ -133,7 +156,7 @@ export default function TransactionsPage() {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction) => (
+                {primaryRows.map((transaction) => (
                   <tr key={transaction.id} className="border-b border-stone-100 last:border-0">
                     <td className="px-4 py-3 text-sm text-stone-700">
                       {new Date(transaction.date).toLocaleDateString("en-IN")}
@@ -153,6 +176,55 @@ export default function TransactionsPage() {
               </tbody>
             </table>
           </div>
+
+          {legacyRows.length > 0 ? (
+            <div className="space-y-2">
+              <h2 className="text-sm font-semibold text-stone-800">
+                Account-wide entries (legacy)
+              </h2>
+              <p className="text-xs text-stone-500 max-w-2xl">
+                These were recorded without a specific property (or before one was linked). They are
+                kept here for your records and are not included in the total above, which uses
+                property-linked payments only.
+              </p>
+              <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-stone-50/50">
+                <table className="w-full min-w-[720px] text-left">
+                  <thead className="bg-stone-100/80 border-b border-stone-200">
+                    <tr>
+                      <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Date</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Property</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Type</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase">Description</th>
+                      <th className="px-4 py-3 text-xs font-semibold text-stone-600 uppercase text-right">
+                        Amount
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {legacyRows.map((transaction) => (
+                      <tr key={transaction.id} className="border-b border-stone-100 last:border-0">
+                        <td className="px-4 py-3 text-sm text-stone-700">
+                          {new Date(transaction.date).toLocaleDateString("en-IN")}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-stone-700">
+                          {propertyLabel(transaction.customer_property_id)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-stone-700 capitalize">{transaction.type}</td>
+                        <td className="px-4 py-3 text-sm text-stone-700">
+                          {transaction.description ?? "-"}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-stone-900 font-medium text-right">
+                          {transaction.amount
+                            ? `INR ${Number(transaction.amount).toLocaleString("en-IN")}`
+                            : "-"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
     </div>
