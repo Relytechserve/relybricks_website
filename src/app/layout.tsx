@@ -84,6 +84,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "atDn9N8HrvjB3xEs5F-RMLm-LT57SzeE2soyuugYzac",
+  },
   category: "business",
 };
 
