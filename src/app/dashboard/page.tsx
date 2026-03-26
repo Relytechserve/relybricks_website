@@ -139,7 +139,7 @@ export default function DashboardPage() {
 
         const customerRow = customer as CustomerProfile;
 
-        const [propsRes, documentsRes, updatesRes, transactionsRes] = await Promise.all([
+        const [propsRes, updatesRes, transactionsRes] = await Promise.all([
           supabase
             .from("customer_properties")
             .select(
@@ -147,10 +147,6 @@ export default function DashboardPage() {
             )
             .eq("customer_id", customerRow.id)
             .order("created_at", { ascending: true }),
-          supabase
-            .from("customer_documents")
-            .select("id", { count: "exact", head: true })
-            .eq("customer_id", customerRow.id),
           supabase
             .from("property_updates")
             .select("id, title, body, created_at")
@@ -166,11 +162,20 @@ export default function DashboardPage() {
         ]);
 
         const properties = (propsRes.data ?? []) as PortalPropertyRow[];
+        const propertyIds = properties.map((p) => p.id);
+        let documentsCount = 0;
+        if (propertyIds.length > 0) {
+          const { count } = await supabase
+            .from("property_documents")
+            .select("id", { count: "exact", head: true })
+            .in("customer_property_id", propertyIds);
+          documentsCount = count ?? 0;
+        }
 
         setData({
           customer: customerRow,
           properties,
-          documentsCount: documentsRes.count ?? 0,
+          documentsCount,
           updates: updatesRes.data ?? [],
           transactions: (transactionsRes.data ?? []) as Transaction[],
         });

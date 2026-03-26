@@ -1,20 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { propertyDisplayTitle } from "@/lib/portal-properties";
 
-type CustomerDocument = {
+type PortalDocument = {
   id: string;
   file_name: string;
-  file_path: string;
   file_type: string | null;
   created_at: string;
+  property_label: string;
+  storage_path: string;
+};
+
+type PropertyAddressRow = {
+  id: string;
+  full_address: string | null;
+  city: string | null;
+  area: string | null;
 };
 
 export default function DocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [documents, setDocuments] = useState<CustomerDocument[]>([]);
+  const [documents, setDocuments] = useState<PortalDocument[]>([]);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -44,10 +54,39 @@ export default function DocumentsPage() {
           return;
         }
 
-        const { data: docs, error: docsError } = await supabase
-          .from("customer_documents")
-          .select("id, file_name, file_path, file_type, created_at")
+        const { data: propsData, error: propsError } = await supabase
+          .from("customer_properties")
+          .select("id, full_address, city, area")
           .eq("customer_id", customer.id)
+          .order("created_at", { ascending: true });
+
+        if (propsError) {
+          setError("Unable to load your documents right now.");
+          return;
+        }
+
+        const propsList = (propsData ?? []) as PropertyAddressRow[];
+        const propIds = propsList.map((p) => p.id);
+        const propMap = new Map(
+          propsList.map((p) => [
+            p.id,
+            propertyDisplayTitle({
+              city: p.city,
+              area: p.area,
+              full_address: p.full_address,
+            }),
+          ]),
+        );
+
+        if (propIds.length === 0) {
+          setDocuments([]);
+          return;
+        }
+
+        const { data: docs, error: docsError } = await supabase
+          .from("property_documents")
+          .select("id, customer_property_id, file_name, storage_path, content_type, created_at")
+          .in("customer_property_id", propIds)
           .order("created_at", { ascending: false });
 
         if (docsError) {
@@ -55,7 +94,25 @@ export default function DocumentsPage() {
           return;
         }
 
-        setDocuments(docs ?? []);
+        type DocRow = {
+          id: string;
+          customer_property_id: string;
+          file_name: string;
+          storage_path: string;
+          content_type: string | null;
+          created_at: string;
+        };
+
+        const mapped: PortalDocument[] = (docs ?? []).map((row: DocRow) => ({
+          id: row.id,
+          file_name: row.file_name,
+          file_type: row.content_type,
+          created_at: row.created_at,
+          storage_path: row.storage_path,
+          property_label: propMap.get(row.customer_property_id) ?? "Property",
+        }));
+
+        setDocuments(mapped);
       } catch {
         setError("Unable to load your documents right now.");
       } finally {
@@ -66,12 +123,60 @@ export default function DocumentsPage() {
     void loadDocuments();
   }, []);
 
+  const handleDownload = useCallback(async (doc: PortalDocument) => {
+    const supabase = createClient();
+    if (!supabase) return;
+    setError(null);
+    setDownloadingId(doc.id);
+    try {
+      const { data, error: signError } = await supabase.storage
+        .from("property-documents")
+        .createSignedUrl(doc.storage_path, 3600);
+      if (signError || !data?.signedUrl) {
+        setError("Could not open the file. Please try again.");
+        return;
+      }
+      window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+    } finally {
+      setDownloadingId(null);
+    }
+  }, []);
+
   const contractDocuments = documents.filter((doc) =>
     /(contract|agreement|lease)/i.test(doc.file_name),
   );
   const otherDocuments = documents.filter(
     (doc) => !/(contract|agreement|lease)/i.test(doc.file_name),
   );
+
+  function renderDocList(items: PortalDocument[]) {
+    return (
+      <ul className="mt-4 grid gap-3">
+        {items.map((doc) => (
+          <li
+            key={doc.id}
+            className="p-4 rounded-xl border border-stone-200 bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          >
+            <div className="min-w-0">
+              <p className="font-medium text-stone-900">{doc.file_name}</p>
+              <p className="text-xs text-stone-500 mt-1">
+                {doc.file_type ?? "file"} · {doc.property_label} ·{" "}
+                {new Date(doc.created_at).toLocaleDateString("en-IN")}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleDownload(doc)}
+              disabled={downloadingId === doc.id}
+              className="shrink-0 rounded-lg border border-stone-300 bg-stone-50 px-3 py-1.5 text-sm font-medium text-stone-900 hover:bg-stone-100 disabled:opacity-50"
+            >
+              {downloadingId === doc.id ? "Opening…" : "Download"}
+            </button>
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <div>
@@ -91,22 +196,7 @@ export default function DocumentsPage() {
             {contractDocuments.length === 0 ? (
               <p className="mt-3 text-sm text-stone-500">No contracts uploaded yet.</p>
             ) : (
-              <ul className="mt-4 grid gap-3">
-                {contractDocuments.map((doc) => (
-                  <li
-                    key={doc.id}
-                    className="p-4 rounded-xl border border-stone-200 bg-white flex items-center justify-between gap-3"
-                  >
-                    <div>
-                      <p className="font-medium text-stone-900">{doc.file_name}</p>
-                      <p className="text-xs text-stone-500 mt-1">
-                        {doc.file_type ?? "file"} - {new Date(doc.created_at).toLocaleDateString("en-IN")}
-                      </p>
-                    </div>
-                    <span className="text-xs text-stone-500 break-all text-right">{doc.file_path}</span>
-                  </li>
-                ))}
-              </ul>
+              renderDocList(contractDocuments)
             )}
           </section>
 
@@ -115,22 +205,7 @@ export default function DocumentsPage() {
             {otherDocuments.length === 0 ? (
               <p className="mt-3 text-sm text-stone-500">No additional documents uploaded yet.</p>
             ) : (
-              <ul className="mt-4 grid gap-3">
-                {otherDocuments.map((doc) => (
-                  <li
-                    key={doc.id}
-                    className="p-4 rounded-xl border border-stone-200 bg-white flex items-center justify-between gap-3"
-                  >
-                    <div>
-                      <p className="font-medium text-stone-900">{doc.file_name}</p>
-                      <p className="text-xs text-stone-500 mt-1">
-                        {doc.file_type ?? "file"} - {new Date(doc.created_at).toLocaleDateString("en-IN")}
-                      </p>
-                    </div>
-                    <span className="text-xs text-stone-500 break-all text-right">{doc.file_path}</span>
-                  </li>
-                ))}
-              </ul>
+              renderDocList(otherDocuments)
             )}
           </section>
         </div>
