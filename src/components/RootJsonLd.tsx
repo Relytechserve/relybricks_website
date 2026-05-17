@@ -1,6 +1,6 @@
 import { getSiteUrl } from "@/lib/site";
 
-const LINKEDIN = "https://www.linkedin.com/company/relybricks-property-management";
+const LINKEDIN = "https://www.linkedin.com/company/relybricks";
 
 export default function RootJsonLd() {
   const base = getSiteUrl();

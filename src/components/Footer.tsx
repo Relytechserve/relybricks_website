@@ -84,7 +84,7 @@ export default function Footer() {
             </p>
             <p className="mt-3">
               <a
-                href="https://www.linkedin.com/company/relybricks-property-management"
+                href="https://www.linkedin.com/company/relybricks"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors inline-flex items-center gap-2"
