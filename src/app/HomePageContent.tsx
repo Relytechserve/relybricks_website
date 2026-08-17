@@ -84,9 +84,9 @@ const stats = [
     hint: "Serving NRIs & local owners in Chennai.",
   },
   {
-    label: "Properties under care",
-    value: "100+",
-    hint: "Across apartments, villas, bungalows and plots.",
+    label: "Annual plans starting from",
+    value: "₹16,000",
+    hint: "Exact scope depends on the property and plan.",
   },
   {
     label: "Average response time",
@@ -223,10 +223,10 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
               <div className="flex items-center justify-between border-b border-stone-100 px-6 py-4">
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-[0.16em] text-stone-500">
-                    Sample Portfolio
+                    Sample portfolio — illustrative only
                   </p>
                   <p className="text-sm font-semibold text-stone-900">
-                    Chennai Residential Homes
+                    Example property
                   </p>
                 </div>
                 <div className="flex items-center gap-2 rounded-full bg-accent-600 px-3 py-1.5 text-[11px] font-medium text-white">
@@ -251,32 +251,32 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                       <div className="flex items-center justify-between gap-3">
                         <div>
                           <p className="text-[11px] uppercase tracking-wide text-stone-300">
-                            3BHK · Velachery
+                            Property overview
                           </p>
                           <p className="mt-0.5 text-xs text-stone-300">
-                            1 covered car park · 1,450 sq. ft.
+                            Example apartment in Chennai
                           </p>
                         </div>
                         <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-[11px] font-medium text-emerald-200 border border-emerald-300/40">
-                          Currently Tenanted
+                          Rent status
                         </span>
                       </div>
                       <div className="flex items-end justify-between gap-3">
                         <div>
                           <p className="text-[11px] uppercase tracking-wide text-stone-400">
-                            Rental performance
+                            Inspection updates
                           </p>
                           <p className="mt-1 text-sm font-semibold text-white">
-                            Rent on time · 12/12 months
+                            Photos and visit notes
                           </p>
                           <p className="mt-0.5 text-[11px] text-stone-300">
-                            Next renewal check · 30 days before expiry
+                            Shared with the owner after each visit
                           </p>
                         </div>
                         <div className="rounded-2xl bg-white/10 px-3 py-2 text-[11px] text-stone-100 border border-white/15">
                           <p>Owner dashboard</p>
                           <p className="mt-0.5 text-[10px] text-stone-200/80">
-                            Photos · reports · tickets
+                            Photos · reports · updates
                           </p>
                         </div>
                       </div>
@@ -286,33 +286,35 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div className="rounded-2xl border border-stone-100 bg-stone-50 px-3 py-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-stone-500">
-                        Tickets this month
+                        Recent activity
                       </p>
-                      <p className="mt-1 text-sm font-semibold text-stone-900">8</p>
-                      <p className="mt-0.5 text-[11px] text-emerald-600">
-                        100% resolved
+                      <p className="mt-1 text-sm font-semibold text-stone-900">
+                        Updates
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-stone-600">
+                        Example owner view
                       </p>
                     </div>
                     <div className="rounded-2xl border border-stone-100 bg-stone-50 px-3 py-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-stone-500">
-                        Avg. response time
+                        Maintenance updates
                       </p>
                       <p className="mt-1 text-sm font-semibold text-stone-900">
-                        &lt; 24 hrs
+                        Vendor coordination
                       </p>
                       <p className="mt-0.5 text-[11px] text-stone-600">
-                        Including weekends
+                        Example follow-up
                       </p>
                     </div>
                     <div className="rounded-2xl border border-stone-100 bg-stone-50 px-3 py-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-stone-500">
-                        Owner satisfaction
+                        Inspection updates
                       </p>
                       <p className="mt-1 text-sm font-semibold text-stone-900">
-                        4.9 / 5
+                        Photos and notes
                       </p>
                       <p className="mt-0.5 text-[11px] text-stone-600">
-                        Based on feedback
+                        Example visit record
                       </p>
                     </div>
                   </div>
@@ -414,7 +416,14 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
               </h2>
               <p className="mt-3 text-sm sm:text-base text-stone-600 max-w-xl">
                 Annual subscription plans for apartments, villas, bungalows and land.
-                You choose the plan; we handle the coordination.
+                You choose the plan; we handle the coordination. Read more about{" "}
+                <Link
+                  href="/property-management-chennai"
+                  className="text-accent-700 font-medium hover:text-accent-600"
+                >
+                  property management services in Chennai
+                </Link>
+                .
               </p>
             </div>
             <div className="text-xs sm:text-sm text-stone-500 max-w-sm">

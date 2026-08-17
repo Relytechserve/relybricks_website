@@ -131,20 +131,75 @@ export type ServiceJsonLdInput = {
   name: string;
   description: string;
   path: string;
+  serviceType?: string;
 };
 
 export function buildService(
   input: ServiceJsonLdInput,
   base = getSiteUrl(),
 ) {
+  const url = absoluteUrl(input.path);
   return {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `${url}#service`,
     name: input.name,
     description: input.description,
-    url: absoluteUrl(input.path),
+    url,
+    ...(input.serviceType ? { serviceType: input.serviceType } : {}),
     provider: { "@id": organizationId(base) },
     areaServed: chennaiAreaServed(),
+  };
+}
+
+export type WebPageJsonLdInput = {
+  name: string;
+  description: string;
+  path: string;
+};
+
+export function buildWebPage(
+  input: WebPageJsonLdInput,
+  base = getSiteUrl(),
+) {
+  const url = absoluteUrl(input.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: input.name,
+    description: input.description,
+    isPartOf: { "@id": websiteId(base) },
+    about: { "@id": `${url}#service` },
+    publisher: { "@id": organizationId(base) },
+    inLanguage: "en-IN",
+  };
+}
+
+/** WebPage + Service graph. Organization is referenced, not duplicated. */
+export function buildServiceWebPageGraph(
+  input: ServiceJsonLdInput & {
+    pageName?: string;
+    pageDescription?: string;
+  },
+  base = getSiteUrl(),
+) {
+  const webPage = buildWebPage(
+    {
+      name: input.pageName ?? input.name,
+      description: input.pageDescription ?? input.description,
+      path: input.path,
+    },
+    base,
+  );
+  const service = buildService(input, base);
+  const { "@context": _webContext, ...webPageNode } = webPage;
+  const { "@context": _serviceContext, ...serviceNode } = service;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [webPageNode, serviceNode],
   };
 }
 

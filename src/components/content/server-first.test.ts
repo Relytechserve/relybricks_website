@@ -20,8 +20,12 @@ describe("content primitives", () => {
   it("does not introduce use client", () => {
     const files = [
       ...listSourceFiles(path.join(process.cwd(), "src/components/content")),
+      ...listSourceFiles(path.join(process.cwd(), "src/content")),
       path.join(process.cwd(), "src/components/Breadcrumbs.tsx"),
       path.join(process.cwd(), "src/lib/contact.ts"),
+      path.join(process.cwd(), "src/app/property-management-chennai/page.tsx"),
+      path.join(process.cwd(), "src/app/nri-property-management-chennai/page.tsx"),
+      path.join(process.cwd(), "src/app/tenant-management-chennai/page.tsx"),
     ];
 
     for (const file of files) {

@@ -2,10 +2,8 @@ import { describe, expect, it } from "vitest";
 import { SITEMAP_PATHS, buildSitemap } from "@/app/sitemap";
 
 const UNPUBLISHED_AEO_PATHS = [
-  "/property-management-chennai",
-  "/nri-property-management-chennai",
-  "/tenant-management-chennai",
   "/property-maintenance-chennai",
+  "/property-inspection-chennai",
   "/property-management-cost-chennai",
   "/manage-property-in-chennai-from-abroad",
   "/best-property-management-companies-chennai",
@@ -17,6 +15,9 @@ describe("sitemap", () => {
   it("emits current public pages on the apex host", () => {
     expect(entries.map((entry) => entry.url)).toEqual([
       "https://relybricks.com/",
+      "https://relybricks.com/property-management-chennai",
+      "https://relybricks.com/nri-property-management-chennai",
+      "https://relybricks.com/tenant-management-chennai",
       "https://relybricks.com/aboutus",
       "https://relybricks.com/referral",
       "https://relybricks.com/services",

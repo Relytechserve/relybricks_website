@@ -8,6 +8,9 @@ export const SITEMAP_PATHS: {
   priority: number;
 }[] = [
   { path: "", changeFrequency: "weekly", priority: 1 },
+  { path: "/property-management-chennai", changeFrequency: "weekly", priority: 0.95 },
+  { path: "/nri-property-management-chennai", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/tenant-management-chennai", changeFrequency: "weekly", priority: 0.9 },
   { path: "/aboutus", changeFrequency: "monthly", priority: 0.9 },
   { path: "/referral", changeFrequency: "monthly", priority: 0.75 },
   { path: "/services", changeFrequency: "weekly", priority: 0.9 },

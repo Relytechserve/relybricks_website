@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 const values = [
@@ -76,7 +77,14 @@ export default function AboutUsPage() {
                 RelyBricks was founded by homeowners who moved abroad and struggled to
                 find reliable property management partners. We know the anxiety of
                 managing properties from a distance—whether you&apos;re an NRI or an
-                out-of-station owner.
+                out-of-station owner.{" "}
+                <Link
+                  href="/nri-property-management-chennai"
+                  className="text-accent-700 font-medium hover:text-accent-600"
+                >
+                  See how we manage Chennai property for owners living abroad
+                </Link>
+                .
               </p>
               <p className="mt-6 text-lg text-stone-600 leading-relaxed">
                 Our mission is simple: to give you trusted, professional care with

@@ -8,6 +8,8 @@ import {
   buildOrganization,
   buildRootGraph,
   buildService,
+  buildServiceWebPageGraph,
+  buildWebPage,
   buildWebSite,
 } from "./jsonld";
 
@@ -103,10 +105,45 @@ describe("JSON-LD builders", () => {
       "https://relybricks.com",
     );
     expect(service["@type"]).toBe("Service");
+    expect(service["@id"]).toBe(
+      "https://relybricks.com/tenant-management-chennai#service",
+    );
     expect(service.provider).toEqual({
       "@id": "https://relybricks.com/#organization",
     });
+    expect(service.areaServed).toMatchObject({ name: "Chennai" });
+    expect(JSON.stringify(service.areaServed)).not.toMatch(/UK|UAE|Singapore|"US"/);
     expect(service).not.toHaveProperty("aggregateRating");
+
+    const page = buildWebPage(
+      {
+        name: "Tenant Management in Chennai | RelyBricks",
+        description: "Tenant management for Chennai rental homes.",
+        path: "/tenant-management-chennai",
+      },
+      "https://relybricks.com",
+    );
+    expect(page["@type"]).toBe("WebPage");
+    expect(page.publisher).toEqual({
+      "@id": "https://relybricks.com/#organization",
+    });
+    expect(page.about).toEqual({
+      "@id": "https://relybricks.com/tenant-management-chennai#service",
+    });
+
+    const graph = buildServiceWebPageGraph(
+      {
+        name: "Tenant management in Chennai",
+        description: "Sourcing, screening and rent collection.",
+        path: "/tenant-management-chennai",
+        pageName: "Tenant Management in Chennai | RelyBricks",
+      },
+      "https://relybricks.com",
+    );
+    expect(graph["@graph"].map((node) => node["@type"])).toEqual([
+      "WebPage",
+      "Service",
+    ]);
 
     const article = buildArticle(
       {

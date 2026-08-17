@@ -1,7 +1,15 @@
 import { getSiteUrl } from "./site";
 
 /** Public authority URLs currently published. Do not list unpublished AEO routes. */
-export const LLMS_CORE_PATHS = ["/", "/services", "/aboutus", "/contact"] as const;
+export const LLMS_CORE_PATHS = [
+  "/",
+  "/property-management-chennai",
+  "/nri-property-management-chennai",
+  "/tenant-management-chennai",
+  "/services",
+  "/aboutus",
+  "/contact",
+] as const;
 
 export function buildLlmsTxt(base = getSiteUrl()): string {
   const urls = LLMS_CORE_PATHS.map((path) =>

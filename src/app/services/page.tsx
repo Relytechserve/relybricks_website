@@ -89,7 +89,21 @@ export default async function ServicesPage() {
           </h1>
           <p className="mt-6 text-xl text-stone-300 max-w-2xl">
             Full-service property management in Chennai. Everything you need to protect
-            and grow your investment.
+            and grow your investment. See{" "}
+            <Link
+              href="/property-management-chennai"
+              className="text-accent-200 underline underline-offset-4 hover:text-white"
+            >
+              property management services in Chennai
+            </Link>
+            , including{" "}
+            <Link
+              href="/tenant-management-chennai"
+              className="text-accent-200 underline underline-offset-4 hover:text-white"
+            >
+              tenant management
+            </Link>
+            .
           </p>
         </div>
       </section>
