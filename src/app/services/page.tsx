@@ -10,6 +10,7 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/outline";
 import PlansSection from "@/components/PlansSection";
+import { getActiveSubscriptionTiers } from "@/lib/plans";
 
 const pillars = [
   {
@@ -44,6 +45,8 @@ const pillars = [
   },
 ];
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Services | RelyBricks - Property Management Chennai",
   description:
@@ -57,7 +60,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const initialTiers = await getActiveSubscriptionTiers();
+
   return (
     <div>
       <section className="relative py-24 lg:py-32 bg-gradient-to-br from-accent-700 to-stone-900 overflow-hidden">
@@ -141,7 +146,7 @@ export default function ServicesPage() {
                 </p>
               </div>
 
-              <PlansSection />
+              <PlansSection initialTiers={initialTiers} />
 
               <p className="mt-10 text-center text-xs sm:text-sm text-stone-400">
                 Need a custom combination or have a mixed portfolio (apartments + land)? We

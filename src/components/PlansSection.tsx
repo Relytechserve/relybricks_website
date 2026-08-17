@@ -4,25 +4,25 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { createClient } from "@/lib/supabase";
+import {
+  PLANS_EMPTY_MESSAGE,
+  PLANS_LOADING_MESSAGE,
+  PLANS_MISSING_CLIENT_MESSAGE,
+  PLANS_UPDATING_MESSAGE,
+  mergeTiersWithPrices,
+  type SubscriptionTier,
+  type SubscriptionTierPrice,
+  type TierWithPrices,
+} from "@/lib/plan-types";
 
-type SubscriptionTier = {
-  id: string;
-  name: string;
-  description: string | null;
-  is_custom: boolean;
-  is_active: boolean;
+export type PlansSectionProps = {
+  /**
+   * `TierWithPrices[]` — server success (including empty).
+   * `null` — server failure; one client retry after hydration.
+   * `undefined` — no server data; original client-only loading path.
+   */
+  initialTiers?: TierWithPrices[] | null;
 };
-
-type SubscriptionTierPrice = {
-  id: string;
-  tier_id: string;
-  city: string;
-  amount: number;
-  currency: string | null;
-  is_active: boolean;
-};
-
-type TierWithPrices = SubscriptionTier & { prices: SubscriptionTierPrice[] };
 
 const PLAN_COPY: Record<
   string,
@@ -71,83 +71,112 @@ function formatAmount(amount: number | null | undefined) {
   return `₹${Number(amount).toLocaleString("en-IN", { maximumFractionDigits: 0 })}/year`;
 }
 
-export default function PlansSection() {
-  const [tiers, setTiers] = useState<TierWithPrices[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function fetchTiersFromBrowserClient(): Promise<{
+  tiers: TierWithPrices[];
+  error: boolean;
+}> {
+  const supabase = createClient();
+  if (!supabase) {
+    return { tiers: [], error: true };
+  }
+
+  const { data: tierRows, error: tierError } = await supabase
+    .from("subscription_tiers")
+    .select("id, name, description, is_custom, is_active")
+    .eq("is_active", true)
+    .order("name", { ascending: true });
+
+  if (tierError) {
+    return { tiers: [], error: true };
+  }
+
+  const tiersData = (tierRows ?? []) as SubscriptionTier[];
+  if (tiersData.length === 0) {
+    return { tiers: [], error: false };
+  }
+
+  const { data: priceRows, error: priceError } = await supabase
+    .from("subscription_tier_prices")
+    .select("id, tier_id, city, amount, currency, is_active")
+    .in(
+      "tier_id",
+      tiersData.map((tier) => tier.id),
+    )
+    .eq("is_active", true);
+
+  if (priceError) {
+    return { tiers: [], error: true };
+  }
+
+  return {
+    tiers: mergeTiersWithPrices(
+      tiersData,
+      (priceRows ?? []) as SubscriptionTierPrice[],
+    ),
+    error: false,
+  };
+}
+
+export default function PlansSection({ initialTiers }: PlansSectionProps) {
+  const [tiers, setTiers] = useState<TierWithPrices[]>(
+    Array.isArray(initialTiers) ? initialTiers : [],
+  );
+  const [loading, setLoading] = useState(initialTiers === undefined);
+  const [error, setError] = useState<string | null>(
+    initialTiers === null ? PLANS_UPDATING_MESSAGE : null,
+  );
 
   useEffect(() => {
-    const supabase = createClient();
+    if (Array.isArray(initialTiers)) {
+      return;
+    }
 
-    if (!supabase) {
-      setError(
-        "We’re updating our subscription plans. Please check back shortly or contact us for pricing.",
-      );
+    if (!createClient()) {
+      setError(PLANS_MISSING_CLIENT_MESSAGE);
       setLoading(false);
       return;
     }
 
+    let cancelled = false;
+
     async function load() {
-      setLoading(true);
-      setError(null);
+      if (initialTiers === undefined) {
+        setLoading(true);
+        setError(null);
+      }
 
       try {
-        const { data: tierRows, error: tierError } = await supabase
-          .from("subscription_tiers")
-          .select("id, name, description, is_custom, is_active")
-          .eq("is_active", true)
-          .order("name", { ascending: true });
+        const result = await fetchTiersFromBrowserClient();
+        if (cancelled) return;
 
-        if (tierError) {
-          setError(
-            "We're updating our subscription plans. Please check back shortly or contact us for pricing.",
-          );
+        if (result.error) {
+          setError(PLANS_UPDATING_MESSAGE);
           return;
         }
 
-        const tiersData = (tierRows ?? []) as SubscriptionTier[];
-        if (tiersData.length === 0) {
-          setTiers([]);
-          return;
-        }
-
-        const tierIds = tiersData.map((t) => t.id);
-
-        const { data: priceRows, error: priceError } = await supabase
-          .from("subscription_tier_prices")
-          .select("id, tier_id, city, amount, currency, is_active")
-          .in("tier_id", tierIds)
-          .eq("is_active", true);
-
-        if (priceError) {
-          setError(
-            "We're updating our subscription plans. Please check back shortly or contact us for pricing.",
-          );
-          return;
-        }
-
-        const pricesData = (priceRows ?? []) as SubscriptionTierPrice[];
-        const merged: TierWithPrices[] = tiersData.map((t) => ({
-          ...t,
-          prices: pricesData.filter((p) => p.tier_id === t.id),
-        }));
-        setTiers(merged);
+        setTiers(result.tiers);
+        setError(null);
       } catch {
-        setError(
-          "We're updating our subscription plans. Please check back shortly or contact us for pricing.",
-        );
+        if (!cancelled) {
+          setError(PLANS_UPDATING_MESSAGE);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     void load();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialTiers]);
 
   if (loading && !tiers.length) {
     return (
       <p className="mt-6 text-xs sm:text-sm text-stone-300">
-        Loading our subscription plans…
+        {PLANS_LOADING_MESSAGE}
       </p>
     );
   }
@@ -163,7 +192,7 @@ export default function PlansSection() {
   if (tiers.length === 0) {
     return (
       <p className="mt-6 text-xs sm:text-sm text-stone-300">
-        We&apos;re finalising our subscription plans. Please contact us for the latest pricing.
+        {PLANS_EMPTY_MESSAGE}
       </p>
     );
   }
@@ -264,4 +293,3 @@ export default function PlansSection() {
     </div>
   );
 }
-

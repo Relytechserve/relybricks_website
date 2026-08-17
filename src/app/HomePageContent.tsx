@@ -14,6 +14,7 @@ import {
 import PlansSection from "@/components/PlansSection";
 import { Tiles } from "@/components/ui/tiles";
 import { HOME_FAQ } from "@/lib/home-faq";
+import type { TierWithPrices } from "@/lib/plan-types";
 
 const heroImage = "https://images.pexels.com/photos/29750117/pexels-photo-29750117.jpeg?auto=compress&w=1200";
 const propertyCardImage = "https://images.pexels.com/photos/5759269/pexels-photo-5759269.jpeg?auto=compress&w=600";
@@ -120,7 +121,11 @@ function trackCallClick(source: string) {
   }
 }
 
-export default function HomePageContent() {
+type HomePageContentProps = {
+  initialTiers?: TierWithPrices[] | null;
+};
+
+export default function HomePageContent({ initialTiers }: HomePageContentProps) {
   return (
     <div className="relative bg-white w-full min-w-0">
       <div className="relative z-10">
@@ -553,7 +558,7 @@ export default function HomePageContent() {
           </p>
         </div>
         <div className="mt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PlansSection />
+          <PlansSection initialTiers={initialTiers} />
         </div>
       </section>
 
