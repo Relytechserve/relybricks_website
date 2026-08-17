@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import PlansSection from "@/components/PlansSection";
 import { Tiles } from "@/components/ui/tiles";
+import { HOME_FAQ } from "@/lib/home-faq";
 
 const heroImage = "https://images.pexels.com/photos/29750117/pexels-photo-29750117.jpeg?auto=compress&w=1200";
 const propertyCardImage = "https://images.pexels.com/photos/5759269/pexels-photo-5759269.jpeg?auto=compress&w=600";
@@ -613,6 +614,38 @@ export default function HomePageContent() {
               </figure>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ — visible copy must match HomeFaqJsonLd / HOME_FAQ */}
+      <section className="py-16 lg:py-24 bg-stone-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
+            FAQ
+          </p>
+          <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
+            Questions owners usually ask
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-stone-600 max-w-2xl">
+            Direct answers about RelyBricks property management in Chennai.
+          </p>
+          <dl className="mt-10 space-y-4">
+            {HOME_FAQ.map((item) => (
+              <div
+                key={item.question}
+                className="rounded-3xl border border-stone-200 bg-white px-5 py-5 sm:px-6 sm:py-6 shadow-sm"
+              >
+                <dt>
+                  <h3 className="text-sm sm:text-base font-semibold text-stone-950">
+                    {item.question}
+                  </h3>
+                </dt>
+                <dd className="mt-2 text-sm text-stone-600 leading-relaxed">
+                  {item.answer}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
