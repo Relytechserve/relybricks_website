@@ -29,6 +29,7 @@ const services = [
     icon: HomeIcon,
     title: "Tenant Management",
     description: "From screening & onboarding to rent collection and renewals.",
+    href: "/tenant-management-chennai",
   },
   {
     icon: WrenchScrewdriverIcon,
@@ -188,7 +189,13 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                   NRIs & local professionals
                 </p>
                 <p className="mt-1 text-xs text-stone-500">
-                  Manage remotely without burdening parents or friends.
+                  Manage remotely without burdening parents or friends.{" "}
+                  <Link
+                    href="/nri-property-management-chennai"
+                    className="text-accent-700 font-medium hover:text-accent-600"
+                  >
+                    NRI property management
+                  </Link>
                 </p>
               </div>
               <div>
@@ -322,7 +329,10 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
 
                 {/* NRI / local split */}
                 <div className="flex flex-col gap-3">
-                  <div className="rounded-2xl border border-stone-100 bg-stone-50 px-3 py-3.5">
+                  <Link
+                    href="/nri-property-management-chennai"
+                    className="rounded-2xl border border-stone-100 bg-stone-50 px-3 py-3.5 hover:border-accent-200"
+                  >
                     <p className="text-[11px] font-semibold text-stone-900">
                       For NRIs
                     </p>
@@ -330,7 +340,7 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                       Manage remotely with digital reports, photos and a single point of
                       contact.
                     </p>
-                  </div>
+                  </Link>
                   <div className="rounded-2xl border border-stone-100 bg-stone-50 px-3 py-3.5">
                     <p className="text-[11px] font-semibold text-stone-900">
                       For local professionals
@@ -461,7 +471,7 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                 <div className="mt-4 flex items-center justify-between text-[11px] text-stone-500">
                   <span>Included in plans</span>
                   <Link
-                    href="/services"
+                    href={"href" in service && service.href ? service.href : "/services"}
                     className="inline-flex items-center gap-1 text-stone-700 group-hover:text-accent-600"
                   >
                     Learn more

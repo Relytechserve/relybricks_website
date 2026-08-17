@@ -2,11 +2,12 @@ import Link from "next/link";
 import Logo from "./Logo";
 
 const footerServices = [
-  "Tenant Management",
-  "Maintenance & Repair",
-  "Interior Design",
-  "Buying & Selling",
-  "Land/Plot Maintenance",
+  { href: "/property-management-chennai", label: "Property Management" },
+  { href: "/nri-property-management-chennai", label: "NRI Property Management" },
+  { href: "/tenant-management-chennai", label: "Tenant Management" },
+  { href: "/services", label: "Maintenance & Repair" },
+  { href: "/services", label: "Buying & Selling" },
+  { href: "/services", label: "Land / Plot Care" },
 ];
 
 const footerLinks = [
@@ -41,9 +42,9 @@ export default function Footer() {
             <h4 className="font-semibold text-white mb-4">Our Services</h4>
             <ul className="space-y-2">
               {footerServices.map((service) => (
-                <li key={service}>
-                  <Link href="/services" className="hover:text-white transition-colors">
-                    {service}
+                <li key={service.label}>
+                  <Link href={service.href} className="hover:text-white transition-colors">
+                    {service.label}
                   </Link>
                 </li>
               ))}

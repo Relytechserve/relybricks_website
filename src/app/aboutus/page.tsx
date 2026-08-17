@@ -127,6 +127,12 @@ export default function AboutUsPage() {
                   <p className="mt-1 text-[11px] text-stone-600">
                     Remote owners who want one accountable partner in Chennai.
                   </p>
+                  <Link
+                    href="/nri-property-management-chennai"
+                    className="mt-2 inline-block text-[11px] font-medium text-accent-700 hover:text-accent-600"
+                  >
+                    NRI property management
+                  </Link>
                 </div>
                 <div className="rounded-2xl border border-stone-200 bg-stone-50 p-4">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-stone-500">

@@ -110,6 +110,43 @@ export default async function ServicesPage() {
 
       <section className="py-24 lg:py-32 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-16">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
+              Explore
+            </p>
+            <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
+              Read more about how we work.
+            </h2>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  href: "/property-management-chennai",
+                  title: "Property Management in Chennai",
+                  body: "The full local service for occupied and vacant homes.",
+                },
+                {
+                  href: "/nri-property-management-chennai",
+                  title: "NRI Property Management",
+                  body: "A Chennai team for owners who live abroad.",
+                },
+                {
+                  href: "/tenant-management-chennai",
+                  title: "Tenant Management",
+                  body: "Sourcing, screening, rent collection and renewals.",
+                },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-3xl border border-stone-200 bg-white p-5 shadow-sm hover:border-accent-300 hover:shadow-md transition-all"
+                >
+                  <h3 className="text-sm font-semibold text-stone-950">{item.title}</h3>
+                  <p className="mt-2 text-sm text-stone-600">{item.body}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* Pillars grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {pillars.map((pillar) => (
