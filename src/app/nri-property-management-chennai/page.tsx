@@ -113,6 +113,23 @@ export default function NriPropertyManagementChennaiPage() {
 
       <Section title="Starting while you are overseas">
         <ProcessSteps steps={NRI_STEPS} />
+        <p className="mt-8 text-sm sm:text-base text-stone-600 leading-relaxed max-w-3xl">
+          For a broader owner playbook, read the{" "}
+          <Link
+            href="/manage-property-in-chennai-from-abroad"
+            className="text-accent-700 font-medium hover:text-accent-600"
+          >
+            guide to managing property from abroad
+          </Link>
+          . Annual plans start from ₹16,000/year — see the{" "}
+          <Link
+            href="/property-management-cost-chennai"
+            className="text-accent-700 font-medium hover:text-accent-600"
+          >
+            property management cost guide
+          </Link>{" "}
+          for how fees are structured.
+        </p>
       </Section>
 
       <Section title="This page is for you if" tone="muted">

@@ -5,6 +5,8 @@ import type { FaqItem } from "@/lib/home-faq";
 import PropertyManagementChennaiPage from "@/app/property-management-chennai/page";
 import NriPropertyManagementChennaiPage from "@/app/nri-property-management-chennai/page";
 import TenantManagementChennaiPage from "@/app/tenant-management-chennai/page";
+import PropertyManagementCostChennaiPage from "@/app/property-management-cost-chennai/page";
+import ManagePropertyInChennaiFromAbroadPage from "@/app/manage-property-in-chennai-from-abroad/page";
 import { HUB_FAQS, HUB_H1, HUB_OPENING } from "./property-management-chennai";
 import {
   NRI_FAQS,
@@ -17,6 +19,18 @@ import {
   TENANT_H1,
   TENANT_OPENING,
 } from "./tenant-management-chennai";
+import {
+  COST_FAQS,
+  COST_H1,
+  COST_OPENING,
+} from "./property-management-cost-chennai";
+import {
+  ABROAD_FAQS,
+  ABROAD_H1,
+  ABROAD_OPENING,
+  ABROAD_STEPS,
+} from "./manage-property-in-chennai-from-abroad";
+import { AEO_INFO_PUBLISHER } from "./aeo-shared";
 
 vi.mock("next/link", () => ({
   default: ({ children, href }: { children: ReactNode; href: string }) => (
@@ -150,5 +164,75 @@ describe("/tenant-management-chennai", () => {
       /MagicBricks|99acres|Housing\.com|NoBroker/i,
     );
     assertFaqMatches(html, TENANT_FAQS);
+  });
+});
+
+describe("/property-management-cost-chennai", () => {
+  const html = renderToString(<PropertyManagementCostChennaiPage />);
+  const text = visibleText(html);
+
+  it("renders one H1, direct answer, pricing models and comparison table", () => {
+    expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
+    expect(text).toContain(COST_H1);
+    expect(text).toContain(COST_OPENING);
+    expect(text).toContain("₹16,000");
+    expect(text).toContain("Why there is no single Chennai price");
+    expect(text).toContain("Flat annual subscription");
+    expect(text).toContain("Percentage of monthly rent");
+    expect(text).toContain("Tenant placement / sourcing fees");
+    expect(text).toContain("Inspection and visit charges");
+    expect(text).toContain("Maintenance coordination fees and vendor charges");
+    expect(text).toContain("One-off services and add-ons");
+    expect(html).toContain("<table");
+    expect(html).toContain("Annual subscription with scope defined by property and plan");
+    expect(html).not.toMatch(/MagicBricks|99acres|Housing\.com|NoBroker/i);
+    expect(html).not.toMatch(/\b\d{1,2}%\s*(of rent)?/i);
+    expect(html).not.toMatch(/cheapest|best value|24\/7/i);
+  });
+
+  it("emits Article, BreadcrumbList and matching FAQ schema — not Service", () => {
+    expect(nodesOfType(html, "Article")).toHaveLength(1);
+    expect(nodesOfType(html, "BreadcrumbList")).toHaveLength(1);
+    expect(nodesOfType(html, "Service")).toHaveLength(0);
+    expect(nodesOfType(html, "LocalBusiness")).toHaveLength(0);
+    const articles = nodesOfType(html, "Article");
+    expect(articles[0].author).toEqual({
+      "@type": "Organization",
+      name: AEO_INFO_PUBLISHER,
+      url: "https://relybricks.com",
+    });
+    assertFaqMatches(html, COST_FAQS);
+  });
+});
+
+describe("/manage-property-in-chennai-from-abroad", () => {
+  const html = renderToString(<ManagePropertyInChennaiFromAbroadPage />);
+  const text = visibleText(html);
+
+  it("renders one H1, direct answer, twelve steps and key sections", () => {
+    expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
+    expect(text).toContain(ABROAD_H1);
+    expect(text).toContain(ABROAD_OPENING);
+    expect(ABROAD_STEPS).toHaveLength(12);
+    for (const step of ABROAD_STEPS) {
+      expect(text).toContain(step.title);
+    }
+    expect(text).toContain("Tenanted vs vacant while you are away");
+    expect(text).toContain("What you should not rely on alone");
+    expect(text).toContain("appropriate professional advice");
+    expect(text).toContain("not legal or tax advice");
+    expect(html).not.toMatch(/United Kingdom|\bUK\b|\bUAE\b|Singapore|\bUS\b/i);
+    expect(html).not.toMatch(/24\/7|overnight/i);
+    expect(html).not.toMatch(/MagicBricks|99acres|Housing\.com|NoBroker/i);
+  });
+
+  it("emits Article, BreadcrumbList and matching FAQ schema — not Service", () => {
+    expect(nodesOfType(html, "Article")).toHaveLength(1);
+    expect(nodesOfType(html, "BreadcrumbList")).toHaveLength(1);
+    expect(nodesOfType(html, "Service")).toHaveLength(0);
+    expect(nodesOfType(html, "LocalBusiness")).toHaveLength(0);
+    assertFaqMatches(html, ABROAD_FAQS);
+    expect(text).toContain("Can I manage a Chennai property while living overseas?");
+    expect(text).toContain("How should urgent issues be handled while I am abroad?");
   });
 });

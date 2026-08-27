@@ -4,13 +4,11 @@ import { SITEMAP_PATHS, buildSitemap } from "@/app/sitemap";
 const UNPUBLISHED_AEO_PATHS = [
   "/property-maintenance-chennai",
   "/property-inspection-chennai",
-  "/property-management-cost-chennai",
-  "/manage-property-in-chennai-from-abroad",
   "/best-property-management-companies-chennai",
 ];
 
 describe("sitemap", () => {
-  const entries = buildSitemap("https://relybricks.com", new Date("2026-08-17"));
+  const entries = buildSitemap("https://relybricks.com", new Date("2026-08-27"));
 
   it("emits current public pages on the apex host", () => {
     expect(entries.map((entry) => entry.url)).toEqual([
@@ -18,6 +16,8 @@ describe("sitemap", () => {
       "https://relybricks.com/property-management-chennai",
       "https://relybricks.com/nri-property-management-chennai",
       "https://relybricks.com/tenant-management-chennai",
+      "https://relybricks.com/property-management-cost-chennai",
+      "https://relybricks.com/manage-property-in-chennai-from-abroad",
       "https://relybricks.com/aboutus",
       "https://relybricks.com/referral",
       "https://relybricks.com/services",

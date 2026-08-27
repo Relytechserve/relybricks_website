@@ -75,6 +75,23 @@ export default function PropertyManagementChennaiPage() {
 
       <Section title="Who the service is for">
         <AudienceList items={HUB_AUDIENCE} />
+        <p className="mt-8 text-sm sm:text-base text-stone-600 leading-relaxed max-w-3xl">
+          If you live overseas or in another Indian city, see the{" "}
+          <Link
+            href="/manage-property-in-chennai-from-abroad"
+            className="text-accent-700 font-medium hover:text-accent-600"
+          >
+            guide to managing property from abroad
+          </Link>{" "}
+          and{" "}
+          <Link
+            href="/nri-property-management-chennai"
+            className="text-accent-700 font-medium hover:text-accent-600"
+          >
+            NRI property management in Chennai
+          </Link>
+          .
+        </p>
       </Section>
 
       <Section title="How management starts" tone="muted">
@@ -89,7 +106,15 @@ export default function PropertyManagementChennaiPage() {
             plans currently start from ₹16,000/year. Basic, Gold and Premium change
             visit frequency, cleaning, pest control and pay-and-use cover. Final
             pricing depends on the property and the scope you choose. Mixed
-            portfolios can be scoped separately. See current plan cards on the{" "}
+            portfolios can be scoped separately. For how fees are structured, see
+            the{" "}
+            <Link
+              href="/property-management-cost-chennai"
+              className="text-accent-700 font-medium hover:text-accent-600"
+            >
+              property management cost guide
+            </Link>
+            . See current plan cards on the{" "}
             <Link href="/services" className="text-accent-700 font-medium hover:text-accent-600">
               services page
             </Link>

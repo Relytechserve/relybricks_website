@@ -188,7 +188,15 @@ export default async function ServicesPage() {
                   <p className="mt-3 text-sm sm:text-base text-stone-300 max-w-xl">
                     All three packages cover bills, tenant management and coordination. As you
                     move from Basic to Gold to Premium, you get more visits, deeper cleaning,
-                    more pest control and higher pay-and-use coverage.
+                    more pest control and higher pay-and-use coverage. Annual plans currently
+                    start from ₹16,000/year — see the{" "}
+                    <Link
+                      href="/property-management-cost-chennai"
+                      className="text-accent-200 underline underline-offset-4 hover:text-white"
+                    >
+                      property management cost guide
+                    </Link>{" "}
+                    for how fees are structured.
                   </p>
                 </div>
                 <p className="text-xs sm:text-sm text-stone-400 max-w-sm shrink-0">

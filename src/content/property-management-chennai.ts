@@ -138,7 +138,17 @@ export const HUB_FAQS: FaqItem[] = [
 
 export const HUB_RELATED: RelatedLinkItem[] = [
   {
+    title: "Property management cost in Chennai",
+    description: "How fees are structured and what affects total cost.",
+    href: "/property-management-cost-chennai",
+  },
+  {
     title: "Managing a Chennai home from abroad",
+    description: "A practical guide for overseas and out-of-station owners.",
+    href: "/manage-property-in-chennai-from-abroad",
+  },
+  {
+    title: "NRI property management in Chennai",
     description:
       "Local oversight, photos and reporting for owners who live overseas.",
     href: NRI_PATH,

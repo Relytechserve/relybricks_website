@@ -154,6 +154,16 @@ export const NRI_FAQS: FaqItem[] = [
 
 export const NRI_RELATED: RelatedLinkItem[] = [
   {
+    title: "How to manage property from abroad",
+    description: "A practical owner guide — documents, access, tenants and bills.",
+    href: "/manage-property-in-chennai-from-abroad",
+  },
+  {
+    title: "Property management cost in Chennai",
+    description: "How fees are structured and what affects total cost.",
+    href: "/property-management-cost-chennai",
+  },
+  {
     title: "Property management services in Chennai",
     description: "The full service set for local and overseas owners.",
     href: HUB_PATH,

@@ -6,6 +6,8 @@ export const LLMS_CORE_PATHS = [
   "/property-management-chennai",
   "/nri-property-management-chennai",
   "/tenant-management-chennai",
+  "/property-management-cost-chennai",
+  "/manage-property-in-chennai-from-abroad",
   "/services",
   "/aboutus",
   "/contact",

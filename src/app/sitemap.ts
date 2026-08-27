@@ -11,6 +11,8 @@ export const SITEMAP_PATHS: {
   { path: "/property-management-chennai", changeFrequency: "weekly", priority: 0.95 },
   { path: "/nri-property-management-chennai", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tenant-management-chennai", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/property-management-cost-chennai", changeFrequency: "monthly", priority: 0.85 },
+  { path: "/manage-property-in-chennai-from-abroad", changeFrequency: "monthly", priority: 0.85 },
   { path: "/aboutus", changeFrequency: "monthly", priority: 0.9 },
   { path: "/referral", changeFrequency: "monthly", priority: 0.75 },
   { path: "/services", changeFrequency: "weekly", priority: 0.9 },
