@@ -2,6 +2,17 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { teamMembers } from "@/data/team";
+
+function initialsFromName(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
 
 const values = [
   "Transparency in every step",
@@ -14,7 +25,7 @@ const values = [
 export const metadata: Metadata = {
   title: "About Us | RelyBricks - Property Management Chennai",
   description:
-    "RelyBricks was founded by homeowners who moved abroad. We provide trusted, professional property management in Chennai with digital solutions.",
+    "Meet the RelyBricks leadership team. Founded by homeowners who moved abroad, we provide trusted, professional property management in Chennai with digital solutions.",
   alternates: { canonical: "/aboutus" },
   openGraph: {
     title: "About RelyBricks — Property Management Chennai",
@@ -147,6 +158,69 @@ export default function AboutUsPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display text-3xl font-bold text-stone-900">
+            Leadership team
+          </h2>
+          <p className="mt-4 text-lg text-stone-600 max-w-3xl">
+            The people who set direction for RelyBricks—across strategy, operations,
+            and the care of homes in Chennai.
+          </p>
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member) => (
+              <article
+                key={member.name}
+                className="bg-stone-50 rounded-2xl border border-stone-200 shadow-sm overflow-hidden flex flex-col"
+              >
+                <div className="relative aspect-square bg-stone-900">
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent-800 to-stone-900"
+                      aria-hidden
+                    >
+                      <span className="text-4xl font-bold text-white tracking-wide">
+                        {initialsFromName(member.name)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-bold text-stone-900">{member.name}</h3>
+                      <p className="mt-1 text-sm font-semibold text-accent-700">{member.role}</p>
+                    </div>
+                    {member.linkedIn ? (
+                      <a
+                        href={member.linkedIn}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 mt-0.5 rounded-lg p-1.5 text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-colors"
+                        aria-label={`${member.name} on LinkedIn`}
+                      >
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
+                      </a>
+                    ) : null}
+                  </div>
+                  <p className="mt-3 text-stone-600 text-sm leading-relaxed">{member.bio}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
