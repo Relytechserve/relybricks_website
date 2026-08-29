@@ -12,6 +12,7 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 import PlansSection from "@/components/PlansSection";
+import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import { Tiles } from "@/components/ui/tiles";
 import { HOME_FAQ } from "@/lib/home-faq";
 import type { TierWithPrices } from "@/lib/plan-types";
@@ -19,10 +20,6 @@ import type { TierWithPrices } from "@/lib/plan-types";
 const heroImage = "https://images.pexels.com/photos/29750117/pexels-photo-29750117.jpeg?auto=compress&w=1200";
 const propertyCardImage = "https://images.pexels.com/photos/5759269/pexels-photo-5759269.jpeg?auto=compress&w=600";
 const whySectionImage = "https://images.pexels.com/photos/15536298/pexels-photo-15536298.jpeg?auto=compress&w=800";
-const testimonialImages = [
-  "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&w=600",
-  "https://images.pexels.com/photos/323705/pexels-photo-323705.jpeg?auto=compress&w=600",
-];
 
 const services = [
   {
@@ -93,21 +90,6 @@ const stats = [
     label: "Average response time",
     value: "< 24h",
     hint: "Most issues acknowledged within a day.",
-  },
-];
-
-const testimonials = [
-  {
-    name: "Niranjan",
-    role: "Homeowner, Chennai (flood-affected property)",
-    quote:
-      "Our properties in Chennai were affected by floods. RelyBricks became a single professional connection to coordinate maintenance and rentals, and gave us our time back and peace of mind.",
-  },
-  {
-    name: "Madhuvanthi",
-    role: "NRI homeowner, US",
-    quote:
-      "Clear communication, professional approach and 100% availability. They helped us manage our home remotely without depending on busy friends or elderly parents.",
   },
 ];
 
@@ -581,65 +563,10 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <section className="py-16 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
-                WHAT OWNERS SAY
-              </p>
-              <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
-                “Gave us our time back and peace of mind.”
-              </h2>
-            </div>
-            <p className="text-xs sm:text-sm text-stone-500 max-w-md">
-              RelyBricks has been recognised as a{" "}
-              <span className="font-semibold">
-                reliable, innovative &amp; tech-enabled property management solution
-              </span>{" "}
-              by industry watchers such as{" "}
-              <a
-                href="https://www.siliconindia.com/realestate/vendor/relybricks-property-management-reliable-innovative-techenabled-property-management-solutions-cid-6705.html"
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-stone-400 underline-offset-4"
-              >
-                SiliconIndia
-              </a>
-              .
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {testimonials.map((t, i) => (
-              <figure
-                key={t.name}
-                className="relative h-full rounded-2xl bg-white overflow-hidden shadow-lg ring-1 ring-stone-200/50"
-              >
-                <div className="relative h-40 w-full shrink-0 overflow-hidden">
-                  <Image
-                    src={testimonialImages[i]}
-                    alt={`RelyBricks customer testimonial — ${t.name}`}
-                    width={600}
-                    height={256}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-                </div>
-                <div className="p-6 sm:p-7">
-                <p className="text-sm text-stone-700 leading-relaxed">“{t.quote}”</p>
-                <figcaption className="mt-5 text-xs text-stone-500">
-                  <span className="font-semibold text-stone-900">{t.name}</span>
-                  <span className="mx-1">·</span>
-                  {t.role}
-                </figcaption>
-                </div>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
+      <GoogleReviewsSection
+        title="“I have no hesitation in recommending their services.”"
+        description="Real feedback from owners who use RelyBricks for property management in Chennai — including overseas owners managing homes remotely."
+      />
 
       {/* FAQ — visible copy must match HomeFaqJsonLd / HOME_FAQ */}
       <section className="py-16 lg:py-24 bg-stone-50">

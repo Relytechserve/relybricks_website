@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import { teamMembers } from "@/data/team";
 
 function initialsFromName(name: string) {
@@ -164,6 +165,12 @@ export default function AboutUsPage() {
 
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <GoogleReviewsSection variant="compact" />
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24 bg-stone-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-3xl font-bold text-stone-900">
             Leadership team
           </h2>
@@ -175,7 +182,7 @@ export default function AboutUsPage() {
             {teamMembers.map((member) => (
               <article
                 key={member.name}
-                className="bg-stone-50 rounded-2xl border border-stone-200 shadow-sm overflow-hidden flex flex-col"
+                className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden flex flex-col"
               >
                 <div className="relative aspect-square bg-stone-900">
                   {member.image ? (

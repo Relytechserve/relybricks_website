@@ -12,8 +12,11 @@ import {
   NRI_FAQS,
   NRI_H1,
   NRI_OPENING,
-  NRI_TESTIMONIAL,
 } from "./nri-property-management-chennai";
+import {
+  getGoogleReviewById,
+  NRI_FEATURED_GOOGLE_REVIEW_ID,
+} from "@/data/google-reviews";
 import {
   TENANT_FAQS,
   TENANT_H1,
@@ -113,14 +116,17 @@ describe("/nri-property-management-chennai", () => {
   const html = renderToString(<NriPropertyManagementChennaiPage />);
   const text = visibleText(html);
 
-  it("renders the overseas-owner opening, vacant and tenanted sections, and exact testimonial", () => {
+  it("renders the overseas-owner opening, vacant and tenanted sections, and featured Google review", () => {
+    const featuredReview = getGoogleReviewById(NRI_FEATURED_GOOGLE_REVIEW_ID);
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(text).toContain(NRI_H1);
     expect(text).toContain(NRI_OPENING);
     expect(text).toContain("If the property is tenanted");
     expect(text).toContain("If the property is vacant");
-    expect(text).toContain(NRI_TESTIMONIAL.quote);
-    expect(text).toContain("Madhuvanthi");
+    expect(featuredReview).toBeDefined();
+    expect(text).toContain(featuredReview!.quote);
+    expect(text).toContain("Niranjan Reddy");
+    expect(text).toContain("Review from Google");
   });
 
   it("emits Chennai-only Service schema and matching FAQs", () => {

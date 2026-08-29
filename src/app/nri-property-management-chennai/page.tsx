@@ -1,6 +1,5 @@
 import Link from "next/link";
 import AudienceList from "@/components/content/AudienceList";
-import CaseStudyCard from "@/components/content/CaseStudyCard";
 import ContentPage from "@/components/content/ContentPage";
 import CtaBanner from "@/components/content/CtaBanner";
 import FaqList from "@/components/content/FaqList";
@@ -10,8 +9,13 @@ import ProcessSteps from "@/components/content/ProcessSteps";
 import RelatedLinks from "@/components/content/RelatedLinks";
 import Section from "@/components/content/Section";
 import StatRow from "@/components/content/StatRow";
+import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import JsonLd from "@/components/JsonLd";
 import { AEO_STATS, TENANT_PATH } from "@/content/aeo-shared";
+import {
+  getGoogleReviewById,
+  NRI_FEATURED_GOOGLE_REVIEW_ID,
+} from "@/data/google-reviews";
 import {
   NRI_AUDIENCE,
   NRI_BREADCRUMBS,
@@ -23,7 +27,6 @@ import {
   NRI_RELATED,
   NRI_SERVICE,
   NRI_STEPS,
-  NRI_TESTIMONIAL,
 } from "@/content/nri-property-management-chennai";
 import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact";
 import { buildServiceWebPageGraph } from "@/lib/jsonld";
@@ -32,6 +35,8 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata = createPageMetadata(NRI_METADATA);
 
 export default function NriPropertyManagementChennaiPage() {
+  const featuredReview = getGoogleReviewById(NRI_FEATURED_GOOGLE_REVIEW_ID);
+
   return (
     <ContentPage breadcrumbs={NRI_BREADCRUMBS}>
       <JsonLd
@@ -136,8 +141,10 @@ export default function NriPropertyManagementChennaiPage() {
         <AudienceList items={NRI_AUDIENCE} />
       </Section>
 
-      <Section title="What owners say">
-        <CaseStudyCard study={NRI_TESTIMONIAL} />
+      <Section title="What owners say" tone="muted">
+        {featuredReview ? (
+          <GoogleReviewsSection variant="featured" reviews={[featuredReview]} />
+        ) : null}
       </Section>
 
       <FaqList
