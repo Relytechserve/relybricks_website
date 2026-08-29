@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import GoogleReviewCard from "@/components/GoogleReviewCard";
-import StarRating from "@/components/StarRating";
+import GoogleReviewCarousel from "@/components/GoogleReviewCarousel";
+import GoogleReviewScore from "@/components/GoogleReviewScore";
 import {
   GOOGLE_BUSINESS_PROFILE_URL,
-  GOOGLE_RATING,
   GOOGLE_REVIEWS,
   GOOGLE_REVIEW_COUNT,
   type GoogleReview,
@@ -39,15 +39,8 @@ export default function GoogleReviewsSection({
   description,
   className = "",
 }: GoogleReviewsSectionProps) {
-  const aggregate = (
-    <div className="flex flex-wrap items-center gap-3 text-sm text-stone-600">
-      <StarRating rating={GOOGLE_RATING} />
-      <span>
-        <span className="font-semibold text-stone-900">{GOOGLE_RATING.toFixed(1)}</span> on Google
-      </span>
-      <span className="text-stone-400">·</span>
-      <GoogleReviewsLink>{GOOGLE_REVIEW_COUNT} reviews</GoogleReviewsLink>
-    </div>
+  const reviewsLink = (
+    <GoogleReviewsLink>{GOOGLE_REVIEW_COUNT} reviews</GoogleReviewsLink>
   );
 
   if (variant === "featured") {
@@ -56,9 +49,11 @@ export default function GoogleReviewsSection({
 
     return (
       <section className={className}>
-        <div className="mb-6">{aggregate}</div>
-        <GoogleReviewCard review={review} />
-        <p className="mt-4 text-sm text-stone-500">
+        <div className="mb-6">
+          <GoogleReviewScore link={reviewsLink} compact />
+        </div>
+        <GoogleReviewCard review={review} variant="featured" />
+        <p className="mt-5 text-sm text-stone-500">
           <GoogleReviewsLink>Read more reviews on Google</GoogleReviewsLink>
         </p>
       </section>
@@ -69,20 +64,36 @@ export default function GoogleReviewsSection({
     const compactReviews = reviews.slice(0, 3);
 
     return (
-      <section className={`rounded-3xl border border-stone-200 bg-stone-50 p-6 sm:p-8 ${className}`}>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">{eyebrow}</p>
-        <h2 className="mt-3 font-display text-2xl font-bold text-stone-900 tracking-tight">
-          Trusted by homeowners in Chennai
-        </h2>
-        <div className="mt-4">{aggregate}</div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          {compactReviews.map((review) => (
-            <GoogleReviewCard key={review.id} review={review} compact />
-          ))}
+      <section
+        className={`relative overflow-hidden rounded-[1.75rem] border border-stone-200/80 bg-gradient-to-br from-white via-stone-50 to-accent-50/30 p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] sm:p-8 ${className}`}
+      >
+        <div
+          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent-200/30 blur-3xl"
+          aria-hidden
+        />
+        <div className="relative">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">{eyebrow}</p>
+          <h2 className="mt-3 font-display text-2xl font-bold text-stone-900 tracking-tight">
+            Trusted by homeowners in Chennai
+          </h2>
+          <div className="mt-5">
+            <GoogleReviewScore link={reviewsLink} compact />
+          </div>
+
+          <div className="mt-8 hidden gap-5 sm:grid sm:grid-cols-3">
+            {compactReviews.map((review) => (
+              <GoogleReviewCard key={review.id} review={review} compact />
+            ))}
+          </div>
+
+          <div className="mt-8 sm:hidden">
+            <GoogleReviewCarousel reviews={compactReviews} autoPlayMs={6000} tight />
+          </div>
+
+          <p className="relative mt-6 text-sm text-stone-600">
+            <GoogleReviewsLink>See all reviews on Google</GoogleReviewsLink>
+          </p>
         </div>
-        <p className="mt-6 text-sm text-stone-600">
-          <GoogleReviewsLink>See all reviews on Google</GoogleReviewsLink>
-        </p>
       </section>
     );
   }
@@ -90,9 +101,18 @@ export default function GoogleReviewsSection({
   const carouselReviews = reviews.filter((review) => review.id !== "google-highlight-service");
 
   return (
-    <section className={`py-16 lg:py-24 bg-white ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+    <section className={`relative overflow-hidden py-16 lg:py-24 ${className}`}>
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-50 via-white to-stone-50"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 h-64 w-[42rem] -translate-x-1/2 rounded-full bg-accent-100/40 blur-3xl"
+        aria-hidden
+      />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
               {eyebrow}
@@ -101,21 +121,17 @@ export default function GoogleReviewsSection({
               {title}
             </h2>
             {description ? (
-              <p className="mt-3 text-sm sm:text-base text-stone-600">{description}</p>
+              <p className="mt-3 text-sm sm:text-base text-stone-600 leading-relaxed">{description}</p>
             ) : null}
           </div>
-          <div className="shrink-0">{aggregate}</div>
+          <GoogleReviewScore link={reviewsLink} />
         </div>
 
-        <div className="mt-10 flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible md:pb-0">
-          {carouselReviews.map((review) => (
-            <div key={review.id} className="min-w-[85%] snap-start sm:min-w-[70%] md:min-w-0">
-              <GoogleReviewCard review={review} />
-            </div>
-          ))}
+        <div className="mt-12 lg:mt-14">
+          <GoogleReviewCarousel reviews={carouselReviews} />
         </div>
 
-        <p className="mt-8 text-sm text-stone-600">
+        <p className="mt-10 text-center text-sm text-stone-600">
           Reviews are from the public Google Business profile.{" "}
           <GoogleReviewsLink>Read all {GOOGLE_REVIEW_COUNT} reviews on Google</GoogleReviewsLink>
         </p>

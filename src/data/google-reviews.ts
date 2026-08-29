@@ -3,7 +3,6 @@ export type GoogleReview = {
   author: string;
   rating: number;
   quote: string;
-  relativeDate?: string;
 };
 
 /** Live Google Business profile — Relybricks Property Management, Chennai. */
@@ -21,7 +20,6 @@ export const GOOGLE_REVIEWS: GoogleReview[] = [
     rating: 5,
     quote:
       "A very professional and prompt service. Highly recommended. I have been using Relybricks for my Chennai properties and they have been very helpful and professional in maintaining and tenanting these properties.",
-    relativeDate: "7 years ago",
   },
   {
     id: "niranjan-reddy",
@@ -29,7 +27,6 @@ export const GOOGLE_REVIEWS: GoogleReview[] = [
     rating: 5,
     quote:
       "Very proactive, informative, reliable and reasonable. I stay in USA and was worried about managing my property back in Chennai. They did a lot of pending work and kept me updated on my community and real estate developments. I strongly recommend them.",
-    relativeDate: "8 years ago",
   },
   {
     id: "srinivasalu-selvapandian",
@@ -37,7 +34,6 @@ export const GOOGLE_REVIEWS: GoogleReview[] = [
     rating: 5,
     quote:
       "I have been using their services for managing my house at Bollineni Hillside near Sholinganallur. We have complete faith in them. They maintain the house and sort out any issues that arise, as with any properties.",
-    relativeDate: "5 years ago",
   },
   {
     id: "google-highlight-recommend",

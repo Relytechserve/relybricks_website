@@ -5,7 +5,7 @@ type GoogleReviewBadgeProps = {
 export default function GoogleReviewBadge({ className = "" }: GoogleReviewBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 text-[11px] font-medium text-stone-600 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-stone-200/80 bg-stone-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-stone-600 ${className}`}
     >
       <span
         className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-stone-200"
@@ -30,7 +30,7 @@ export default function GoogleReviewBadge({ className = "" }: GoogleReviewBadgeP
           />
         </svg>
       </span>
-      Review from Google
+      Google review
     </span>
   );
 }

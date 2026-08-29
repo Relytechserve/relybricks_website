@@ -126,7 +126,7 @@ describe("/nri-property-management-chennai", () => {
     expect(featuredReview).toBeDefined();
     expect(text).toContain(featuredReview!.quote);
     expect(text).toContain("Niranjan Reddy");
-    expect(text).toContain("Review from Google");
+    expect(text).toContain("Google review");
   });
 
   it("emits Chennai-only Service schema and matching FAQs", () => {
