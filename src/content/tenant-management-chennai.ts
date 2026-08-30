@@ -17,14 +17,14 @@ import {
 export const TENANT_METADATA = {
   title: "Tenant Management in Chennai | RelyBricks",
   description:
-    "RelyBricks sources tenants for Chennai rental homes, then handles screening, onboarding, rent collection, maintenance and renewals. Plans from ₹16,000/year.",
+    "RelyBricks sources tenants for Chennai rental homes, then handles screening, onboarding, rent collection, maintenance coordination and renewals — included in end-to-end property management.",
   path: TENANT_PATH,
 };
 
 export const TENANT_H1 = "Tenant management for rental homes in Chennai";
 
 export const TENANT_OPENING =
-  "RelyBricks manages the tenant lifecycle for rental homes in Chennai, including helping source prospective tenants through its own network, property marketplace listings, partners and brokers. After that, the team can screen candidates, coordinate onboarding and rental agreements, collect rent, handle tenant communication, and arrange maintenance. When a tenancy continues or ends, RelyBricks can support renewals and relevant inspection reporting. Homes can be prepared with cleaning and minor repairs before a new occupant arrives. This is for apartments, villas and bungalows in Chennai, including for owners who live elsewhere. Annual plans currently start from ₹16,000/year. Owners stay involved in decisions that need their approval, while day-to-day tenant follow-up sits with one local team.";
+  "RelyBricks manages the tenant lifecycle for rental homes in Chennai, including helping source prospective tenants through its own network, property marketplace listings, partners and brokers. After that, the team can screen candidates, coordinate onboarding and rental agreements, collect rent, handle tenant communication, and arrange maintenance coordination. When a tenancy continues or ends, RelyBricks can support renewals and relevant inspection reporting. Homes can be prepared with cleaning and minor repairs before a new occupant arrives. This is for apartments, villas and bungalows in Chennai, including for owners who live elsewhere. Tenant management is included in RelyBricks' end-to-end property management fee. Owners stay involved in decisions that need their approval, while day-to-day tenant follow-up sits with one local team.";
 
 export const TENANT_BREADCRUMBS: BreadcrumbItem[] = [
   HOME_CRUMB,
@@ -125,7 +125,7 @@ export const TENANT_FAQS: FaqItem[] = [
   {
     question: "Do you collect rent and follow up if it is late?",
     answer:
-      "Yes. Plan copy includes tenant management and rent collection. Follow-up is part of managing the tenancy. The site does not publish a legal-recovery or eviction process.",
+      "Yes. Tenant management and rent collection are part of end-to-end property management. Follow-up is part of managing the tenancy.",
   },
   {
     question: "Who does the tenant call when something breaks?",
@@ -161,8 +161,8 @@ export const TENANT_RELATED: RelatedLinkItem[] = [
     href: NRI_PATH,
   },
   {
-    title: "Plans that include tenant management",
-    description: "See current subscription inclusions.",
+    title: "Property management pricing",
+    description: "How the annual management fee is calculated.",
     href: "/services",
   },
   {

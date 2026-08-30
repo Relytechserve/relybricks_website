@@ -111,8 +111,9 @@ export default function ManagePropertyInChennaiFromAbroadPage() {
             city, elsewhere in India, and overseas. The Chennai team can manage
             tenant sourcing and the tenancy lifecycle, vacant residential care,
             maintenance and emergencies, inspections with photo and video, and
-            bills, taxes and community payments. Annual plans start from
-            ₹16,000/year; exact scope depends on the property and plan.
+            bills, taxes and community payments. End-to-end management is priced at 12% of annual
+            rental value, minimum ₹21,000/year + applicable GST; plots, land and other scopes are
+            quoted separately.
           </p>
           <p>
             This guide stands alone whether or not you use RelyBricks. For

@@ -31,7 +31,7 @@ const steps = [
   {
     step: "02",
     title: "We connect",
-    body: "They reach out—we walk them through how subscription plans, visits, and reporting work.",
+    body: "They reach out—we walk them through how management works, pricing, visits, and reporting.",
     icon: SparklesIcon,
   },
   {

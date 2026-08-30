@@ -17,6 +17,7 @@ const PRODUCTION_FILES = [
   "src/lib/llms-txt.ts",
   "src/app/sitemap.ts",
   "src/app/HomePageContent.tsx",
+  "src/app/services/page.tsx",
 ];
 
 const FORBIDDEN = [
@@ -36,10 +37,19 @@ const FORBIDDEN = [
   /\bOMR\b/,
   /Adyar/,
   /12\/12/,
+  /₹16,000/,
+  /\b16000\b/,
+  /₹26,000/,
+  /\b26000\b/,
+  /Basic Plan/i,
+  /Gold Plan/i,
+  /Premium Plan/i,
+  /Annual plans starting/i,
+  /pay-and-use pricing/i,
 ];
 
 describe("AEO production copy", () => {
-  it("does not publish forbidden claims", () => {
+  it("does not publish forbidden claims or retired public pricing", () => {
     for (const relative of PRODUCTION_FILES) {
       const source = readFileSync(path.join(process.cwd(), relative), "utf8");
       for (const pattern of FORBIDDEN) {
@@ -50,16 +60,17 @@ describe("AEO production copy", () => {
 });
 
 describe("homepage stats", () => {
-  it("replaces the inaccurate portfolio count with the starting price", () => {
+  it("shows the management fee model instead of retired tier pricing", () => {
     const source = readFileSync(
       path.join(process.cwd(), "src/app/HomePageContent.tsx"),
       "utf8",
     );
     expect(source).not.toContain("100+");
     expect(source).not.toContain("Properties under care");
-    expect(source).toContain('value: "₹16,000"');
-    expect(source).toContain("Annual plans starting from");
-    expect(source).toContain("Exact scope depends on the property and plan.");
+    expect(source).toContain("MANAGEMENT_FEE_RATE_PERCENT");
+    expect(source).toContain("MINIMUM_ANNUAL_MANAGEMENT_FEE_INR");
+    expect(source).not.toContain("₹16,000");
+    expect(source).not.toContain("Basic");
     expect(source).not.toContain("4.9");
     expect(source).not.toContain("Velachery");
     expect(source).not.toContain("12/12");

@@ -9,60 +9,66 @@ import {
   MapIcon,
   SparklesIcon,
 } from "@heroicons/react/24/outline";
-import PlansSection from "@/components/PlansSection";
-import { getActiveSubscriptionTiers } from "@/lib/plans";
+import PricingCalculator from "@/components/PricingCalculator";
+import {
+  GST_LABEL,
+  MANAGEMENT_FEE_RATE_PERCENT,
+  MANAGEMENT_INCLUSIONS,
+  MINIMUM_ANNUAL_MANAGEMENT_FEE_INR,
+  PRICING_CORE_ANSWER,
+  PRICING_HEADLINE,
+  PROJECT_MANAGEMENT_FEE_RATE_PERCENT,
+  PROJECT_VALUE_DEFINITION,
+  formatInr,
+} from "@/lib/pricing";
 
 const pillars = [
   {
     icon: BuildingOffice2Icon,
     title: "Bills, taxes & community payments",
-    body: "Utility bills, taxes and community maintenance handled end-to-end so nothing gets missed.",
+    body: "Utility bills, taxes and community maintenance coordinated so nothing gets missed.",
   },
   {
     icon: HomeIcon,
     title: "Tenant lifecycle management",
-    body: "From marketing and screening to agreements and rent collection, we manage every step.",
+    body: "From sourcing and screening to agreements, rent collection and renewals.",
   },
   {
     icon: WrenchScrewdriverIcon,
     title: "Maintenance & emergency response",
-    body: "Day-to-day issues, repairs and emergencies coordinated with trusted vendors.",
+    body: "Day-to-day issues and emergencies coordinated with trusted vendors.",
   },
   {
     icon: PaintBrushIcon,
     title: "Cleaning, pest & upgrades",
-    body: "Scheduled cleaning, pest control, and interior upgrades to maintain your property’s value.",
+    body: "Property readiness, scheduled care and refurbishment coordination.",
   },
   {
     icon: MapIcon,
     title: "Inspections, visits & reporting",
-    body: "Visits with photos and videos, condition reports and practical advice for improvements.",
+    body: "Visits with photos and videos, condition reports and owner updates.",
   },
   {
     icon: SparklesIcon,
-    title: "Pay-and-use & value-added services",
-    body: "AC servicing, plumbing, electricals and more through our curated partner network.",
+    title: "Concierge & value-added services",
+    body: "Additional coordination through our partner network when you need it.",
   },
 ];
-
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Services | RelyBricks - Property Management Chennai",
   description:
-    "Tenant management, maintenance, interior design, buying & selling, land maintenance, and value-added services. Full-service property management in Chennai.",
+    "End-to-end property management in Chennai — 12% of annual rental value, minimum ₹21,000/year + applicable GST. Tenant, maintenance, inspections and reporting included.",
   alternates: { canonical: "/services" },
   openGraph: {
     title: "RelyBricks Services — Full Property Management Chennai",
     description:
-      "Tenant lifecycle, maintenance, inspections, bills, and pay-as-you-go services—one accountable team.",
+      "End-to-end property management — tenant lifecycle, maintenance coordination, inspections and owner reporting.",
     url: "/services",
   },
 };
 
-export default async function ServicesPage() {
-  const initialTiers = await getActiveSubscriptionTiers();
-
+export default function ServicesPage() {
   return (
     <div>
       <section className="relative py-24 lg:py-32 bg-gradient-to-br from-accent-700 to-stone-900 overflow-hidden">
@@ -74,27 +80,18 @@ export default async function ServicesPage() {
             className="object-cover opacity-30"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-accent-900/85 via-stone-900 to-stone-900" />
-          <div
-            className="absolute inset-0 opacity-[0.06]"
-            style={{
-              backgroundImage:
-                "linear-gradient(135deg, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(225deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
-            }}
-          />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="font-display text-4xl lg:text-5xl font-bold text-white">
             Our Services
           </h1>
           <p className="mt-6 text-xl text-stone-300 max-w-2xl">
-            Full-service property management in Chennai. Everything you need to protect
-            and grow your investment. See{" "}
+            One end-to-end property management service in Chennai. See{" "}
             <Link
               href="/property-management-chennai"
               className="text-accent-200 underline underline-offset-4 hover:text-white"
             >
-              property management services in Chennai
+              property management in Chennai
             </Link>
             , including{" "}
             <Link
@@ -147,7 +144,6 @@ export default async function ServicesPage() {
             </div>
           </div>
 
-          {/* Pillars grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {pillars.map((pillar) => (
               <div
@@ -159,59 +155,67 @@ export default async function ServicesPage() {
                     <pillar.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-semibold text-stone-900">
-                      {pillar.title}
-                    </h2>
-                    <p className="mt-2 text-xs sm:text-sm text-stone-600">
-                      {pillar.body}
-                    </p>
+                    <h2 className="text-sm font-semibold text-stone-900">{pillar.title}</h2>
+                    <p className="mt-2 text-xs sm:text-sm text-stone-600">{pillar.body}</p>
                   </div>
                 </div>
                 <div className="mt-4 text-[11px] text-stone-500">
-                  Included across Basic, Gold and Premium with varying depth and frequency.
+                  Included in the annual property management fee.
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Package comparison - aligned with Home page Plans */}
-          <div className="mt-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 bg-stone-900 sm:rounded-2xl overflow-hidden">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">
-                    PACKAGES
-                  </p>
-                  <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-white tracking-tight">
-                    What you get in each plan.
-                  </h2>
-                  <p className="mt-3 text-sm sm:text-base text-stone-300 max-w-xl">
-                    All three packages cover bills, tenant management and coordination. As you
-                    move from Basic to Gold to Premium, you get more visits, deeper cleaning,
-                    more pest control and higher pay-and-use coverage. Annual plans currently
-                    start from ₹16,000/year — see the{" "}
-                    <Link
-                      href="/property-management-cost-chennai"
-                      className="text-accent-200 underline underline-offset-4 hover:text-white"
-                    >
-                      property management cost guide
-                    </Link>{" "}
-                    for how fees are structured.
-                  </p>
-                </div>
-                <p className="text-xs sm:text-sm text-stone-400 max-w-sm shrink-0">
-                  Figures and inclusions below are summarised from the official BASIC, GOLD and
-                  PREMIUM package documents.
-                </p>
+          <div className="mt-20 rounded-3xl border border-stone-200 bg-white p-8 sm:p-10 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">
+              PRICING
+            </p>
+            <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
+              {PRICING_HEADLINE}
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-stone-700 max-w-3xl leading-relaxed">
+              {PRICING_CORE_ANSWER}
+            </p>
+            <p className="mt-3 text-sm text-stone-600">
+              {MANAGEMENT_FEE_RATE_PERCENT}% of annual rental value · minimum{" "}
+              {formatInr(MINIMUM_ANNUAL_MANAGEMENT_FEE_INR)}/year + {GST_LABEL}
+            </p>
+
+            <div className="mt-10 grid gap-10 lg:grid-cols-2">
+              <div>
+                <h3 className="text-lg font-semibold text-stone-900">What&apos;s included</h3>
+                <ul className="mt-4 grid gap-2 text-sm text-stone-600 sm:grid-cols-2">
+                  {MANAGEMENT_INCLUSIONS.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
               </div>
-
-              <PlansSection initialTiers={initialTiers} />
-
-              <p className="mt-10 text-center text-xs sm:text-sm text-stone-400">
-                Need a custom combination or have a mixed portfolio (apartments + land)? We
-                can tailor a scope and pricing specifically for your situation.
-              </p>
+              <PricingCalculator />
             </div>
+          </div>
+
+          <div className="mt-10 rounded-3xl border border-stone-200 bg-stone-900 p-8 sm:p-10 text-white">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">
+              Property works &amp; project management
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-stone-300 leading-relaxed max-w-3xl">
+              Repairs, maintenance, refurbishment and improvement works are financially separate
+              from the annual management fee. RelyBricks coordinates those works at{" "}
+              {PROJECT_MANAGEMENT_FEE_RATE_PERCENT}% of project value + {GST_LABEL}. Project value
+              means {PROJECT_VALUE_DEFINITION} Vendor labour, materials and third-party costs are
+              separate.
+            </p>
+            <p className="mt-6 text-sm text-stone-400">
+              Plots, land, owner-occupied homes, sale-only or project-only scopes are quoted
+              separately.{" "}
+              <Link
+                href="/property-management-cost-chennai"
+                className="text-accent-200 underline underline-offset-4 hover:text-white"
+              >
+                See the full pricing guide
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>

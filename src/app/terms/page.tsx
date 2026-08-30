@@ -41,10 +41,12 @@ export default function TermsPage() {
           <h2>2. Services</h2>
           <p>
             RelyBricks provides property management services including tenant management,
-            maintenance and repair coordination, bills and tax payments, cleaning and pest control,
-            property visits and reporting, and related services for residential properties in
-            Chennai and select locations. The scope, deliverables, and terms of each engagement are
-            set out in separate subscription agreements or service agreements.
+            maintenance and repair coordination, bills and tax payments, property visits and
+            reporting, and related services for residential properties in Chennai and select
+            locations. Public website information describes an annual property management fee
+            linked to rental value and a separate project management fee for agreed property works.
+            The scope, deliverables, fees and terms of each engagement are set out in separate
+            service agreements signed with the owner.
           </p>
 
           <h2>3. Use of Website</h2>

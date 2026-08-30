@@ -101,20 +101,18 @@ export default function PropertyManagementChennaiPage() {
       <Section title="Property types and what it costs" width="prose">
         <div className="space-y-4 text-sm sm:text-base text-stone-600 leading-relaxed">
           <p>
-            RelyBricks manages apartments, villas, bungalows and plots in Chennai —
-            occupied or vacant, according to the agreed scope. Annual subscription
-            plans currently start from ₹16,000/year. Basic, Gold and Premium change
-            visit frequency, cleaning, pest control and pay-and-use cover. Final
-            pricing depends on the property and the scope you choose. Mixed
-            portfolios can be scoped separately. For how fees are structured, see
-            the{" "}
+            RelyBricks manages apartments, villas and bungalows in Chennai — occupied or vacant.
+            Plots and land are scoped and quoted separately. End-to-end property management is
+            priced at 12% of annual rental value, subject to a minimum annual management fee of
+            ₹21,000 + applicable GST. Each property is calculated separately; portfolio pricing may
+            be agreed separately. For examples and a calculator, see the{" "}
             <Link
               href="/property-management-cost-chennai"
               className="text-accent-700 font-medium hover:text-accent-600"
             >
               property management cost guide
             </Link>
-            . See current plan cards on the{" "}
+            . See what is included on the{" "}
             <Link href="/services" className="text-accent-700 font-medium hover:text-accent-600">
               services page
             </Link>

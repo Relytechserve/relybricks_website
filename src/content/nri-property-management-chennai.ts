@@ -18,7 +18,7 @@ import {
 export const NRI_METADATA = {
   title: "NRI Property Management in Chennai | RelyBricks",
   description:
-    "Live abroad and own a home in Chennai? RelyBricks is the local team for tenanted or vacant properties — visits, photos, repairs and bills. Plans from ₹16,000/year.",
+    "Live abroad and own a home in Chennai? RelyBricks provides end-to-end property management — 12% of annual rental value, minimum ₹21,000/year + applicable GST.",
   path: NRI_PATH,
 };
 
@@ -26,7 +26,7 @@ export const NRI_H1 =
   "A local team for your Chennai property while you live abroad";
 
 export const NRI_OPENING =
-  "If you own a home in Chennai and live abroad, RelyBricks can be the team on the ground. The company was started by homeowners who moved overseas and needed someone they could trust with tenants, repairs and vacant-property care. You get inspections with photos and videos, a single point of contact, and digital reports so you can see what is happening without relying on busy friends or elderly parents. Whether the home is tenanted or empty, the Chennai team can visit, coordinate work and keep you informed. Most issues are acknowledged in under 24 hours. Annual plans start from ₹16,000/year. The service is delivered by RelyBricks' Chennai team, giving overseas owners one clear local point of accountability for the property.";
+  "If you own a home in Chennai and live abroad, RelyBricks can be the team on the ground. The company was started by homeowners who moved overseas and needed someone they could trust with tenants, repairs and vacant-property care. You get inspections with photos and videos, a single point of contact, and digital reports so you can see what is happening without relying on busy friends or elderly parents. Whether the home is tenanted or empty, the Chennai team can visit, coordinate work and keep you informed. Most issues are acknowledged in under 24 hours. End-to-end management is priced at 12% of annual rental value, subject to a minimum annual fee of ₹21,000 + applicable GST.";
 
 export const NRI_BREADCRUMBS: BreadcrumbItem[] = [
   HOME_CRUMB,
@@ -78,7 +78,7 @@ export const NRI_STEPS: ProcessStep[] = [
   },
   {
     title: "Agree the plan",
-    body: "Scope and subscription; visit frequency is set in that plan.",
+    body: "Scope and management fee; oversight continues through vacancy.",
   },
   {
     title: "Ongoing care and reporting",
@@ -174,8 +174,8 @@ export const NRI_RELATED: RelatedLinkItem[] = [
     href: TENANT_PATH,
   },
   {
-    title: "Plans and visit frequency",
-    description: "See current subscription inclusions.",
+    title: "Pricing and inclusions",
+    description: "How the management fee is calculated.",
     href: "/services",
   },
   {

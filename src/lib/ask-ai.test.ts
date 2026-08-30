@@ -7,6 +7,10 @@ describe("ask-ai", () => {
     expect(links).toHaveLength(ASK_AI_PROVIDERS.length);
     expect(links[0]?.href).toContain(encodeURIComponent(ASK_AI_PROMPT));
     expect(ASK_AI_PROMPT).toContain("property-management-cost-chennai");
+    expect(ASK_AI_PROMPT).toContain("12%");
+    expect(ASK_AI_PROMPT).toContain("₹21,000");
+    expect(ASK_AI_PROMPT).toContain("no longer offers Basic, Gold or Premium");
+    expect(ASK_AI_PROMPT).not.toMatch(/Basic Plan|Gold Plan|Premium Plan/i);
     expect(ASK_AI_PROMPT).toContain("/contact");
     expect(ASK_AI_PROMPT).toContain("+91 99520 04948");
     expect(links.map((link) => link.id)).toEqual([

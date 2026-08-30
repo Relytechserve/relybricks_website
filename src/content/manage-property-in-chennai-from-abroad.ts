@@ -131,7 +131,7 @@ export const ABROAD_FAQS: FaqItem[] = [
   {
     question: "How much does professional management cost?",
     answer:
-      "RelyBricks annual plans start from ₹16,000/year; scope depends on property and plan. See the property management cost guide and the services page for current inclusions.",
+      "RelyBricks charges 12% of annual rental value for end-to-end property management, subject to a minimum annual fee of ₹21,000 + applicable GST. See the property management cost guide and services page for what is included.",
   },
 ];
 
@@ -157,8 +157,8 @@ export const ABROAD_RELATED: RelatedLinkItem[] = [
     href: TENANT_PATH,
   },
   {
-    title: "Current plans and inclusions",
-    description: "See what Basic, Gold and Premium cover.",
+    title: "What the management fee includes",
+    description: "End-to-end property management on the services page.",
     href: "/services",
   },
   {

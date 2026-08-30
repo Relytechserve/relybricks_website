@@ -126,7 +126,8 @@ export default function NriPropertyManagementChennaiPage() {
           >
             guide to managing property from abroad
           </Link>
-          . Annual plans start from ₹16,000/year — see the{" "}
+          . Management is priced at 12% of annual rental value, minimum ₹21,000/year + applicable
+          GST — see the{" "}
           <Link
             href="/property-management-cost-chennai"
             className="text-accent-700 font-medium hover:text-accent-600"

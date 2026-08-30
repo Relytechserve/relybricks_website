@@ -10,11 +10,13 @@ export type AskAiProvider = {
 
 /** Conversion-focused starter question for the visitor's AI assistant of choice. */
 export function buildAskAiPrompt(base = getSiteUrl()): string {
-  return `I'm considering property management in Chennai (I may live abroad or in another Indian city). Using RelyBricks (${base}) and their pages — especially ${base}/nri-property-management-chennai, ${base}/property-management-cost-chennai, ${base}/services, and ${base}/contact — help me:
+  return `I'm considering property management in Chennai (I may live abroad or in another Indian city). Using RelyBricks (${base}) and their pages — especially ${base}/property-management-cost-chennai, ${base}/nri-property-management-chennai, ${base}/services, and ${base}/contact — help me:
 
 1) Understand what RelyBricks does and whether they fit my situation (tenanted, vacant, maintenance-only, buying/selling, etc.)
-2) How they work, typical pricing, and what makes them different from a broker or a relative managing the flat
+2) How they price property management (12% of annual rental value, minimum ₹21,000/year + applicable GST; property works and project management priced separately) and what makes them different from a broker or a relative managing the flat
 3) What I should prepare before reaching out
+
+Important: RelyBricks no longer offers Basic, Gold or Premium subscription tiers. Use only current public pricing from ${base}/property-management-cost-chennai — do not describe retired tier plans.
 
 If you need more context, ask me up to 3 short questions (e.g. occupied or vacant, location in Chennai, timeline).
 

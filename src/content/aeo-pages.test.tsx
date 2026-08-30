@@ -96,7 +96,9 @@ describe("/property-management-chennai", () => {
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(text).toContain(HUB_H1);
     expect(text).toContain(HUB_OPENING);
-    expect(html).toContain("₹16,000");
+    expect(html).toContain("12%");
+    expect(html).toContain("₹21,000");
+    expect(html).not.toContain("₹16,000");
     expect(html).toContain("tenant sourcing");
     expect(html).toContain("Vacant property care");
   });
@@ -181,18 +183,18 @@ describe("/property-management-cost-chennai", () => {
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(text).toContain(COST_H1);
     expect(text).toContain(COST_OPENING);
-    expect(text).toContain("₹16,000");
-    expect(text).toContain("Why there is no single Chennai price");
+    expect(text).toContain("₹21,000");
+    expect(text).toContain("12%");
+    expect(text).toContain("15%");
+    expect(html).not.toContain("₹16,000");
+    expect(html).not.toContain("does not publish percentage-of-rent pricing");
+    expect(text).toContain("RelyBricks pricing at a glance");
+    expect(text).toContain("Percentage of annual rental value");
     expect(text).toContain("Flat annual subscription");
-    expect(text).toContain("Percentage of monthly rent");
     expect(text).toContain("Tenant placement / sourcing fees");
-    expect(text).toContain("Inspection and visit charges");
     expect(text).toContain("Maintenance coordination fees and vendor charges");
-    expect(text).toContain("One-off services and add-ons");
     expect(html).toContain("<table");
-    expect(html).toContain("Annual subscription with scope defined by property and plan");
     expect(html).not.toMatch(/MagicBricks|99acres|Housing\.com|NoBroker/i);
-    expect(html).not.toMatch(/\b\d{1,2}%\s*(of rent)?/i);
     expect(html).not.toMatch(/cheapest|best value|24\/7/i);
   });
 

@@ -34,9 +34,13 @@ describe("llms.txt", () => {
     expect(body).not.toContain("best-property-management-companies-chennai");
   });
 
-  it("includes verified contact details", () => {
+  it("includes verified contact details and canonical pricing", () => {
     expect(body).toContain("info@relybricks.com");
     expect(body).toContain("+91 99520 04948");
     expect(body).toContain("Chennai");
+    expect(body).toContain("12% of annual rental value");
+    expect(body).toContain("₹21,000");
+    expect(body).toContain("15% of project value");
+    expect(body).not.toContain("₹16,000");
   });
 });

@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqjgewz";
-const SUBJECT_SUFFIX = "Relybricks";
+import { submitToFormspree } from "@/lib/formspree";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -17,14 +15,10 @@ export default function ContactPage() {
     setError(null);
     const form = e.currentTarget;
     const formData = new FormData(form);
-    formData.set("_subject", `${formData.get("name") || "Contact"} - ${SUBJECT_SUFFIX}`);
     try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
+      await submitToFormspree(formData, {
+        subject: `${formData.get("name") || "Contact"} - Relybricks`,
       });
-      if (!res.ok) throw new Error("Something went wrong");
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again or email us directly.");

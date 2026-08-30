@@ -11,11 +11,21 @@ import {
   SparklesIcon,
   PhoneIcon,
 } from "@heroicons/react/24/outline";
-import PlansSection from "@/components/PlansSection";
+import PricingCalculator from "@/components/PricingCalculator";
 import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import { Tiles } from "@/components/ui/tiles";
 import { HOME_FAQ } from "@/lib/home-faq";
-import type { TierWithPrices } from "@/lib/plan-types";
+import {
+  GST_LABEL,
+  MANAGEMENT_FEE_RATE_PERCENT,
+  MANAGEMENT_INCLUSIONS,
+  MINIMUM_ANNUAL_MANAGEMENT_FEE_INR,
+  PRICING_CORE_ANSWER,
+  PRICING_HEADLINE,
+  PRICING_NO_TIERS,
+  PROJECT_MANAGEMENT_FEE_RATE_PERCENT,
+  formatInr,
+} from "@/lib/pricing";
 
 const heroImage = "https://images.pexels.com/photos/29750117/pexels-photo-29750117.jpeg?auto=compress&w=1200";
 const propertyCardImage = "https://images.pexels.com/photos/5759269/pexels-photo-5759269.jpeg?auto=compress&w=600";
@@ -82,9 +92,9 @@ const stats = [
     hint: "Serving NRIs & local owners in Chennai.",
   },
   {
-    label: "Annual plans starting from",
-    value: "₹16,000",
-    hint: "Exact scope depends on the property and plan.",
+    label: "Management fee",
+    value: `${MANAGEMENT_FEE_RATE_PERCENT}%`,
+    hint: `Of annual rental value · min ${formatInr(MINIMUM_ANNUAL_MANAGEMENT_FEE_INR)}/yr + ${GST_LABEL}`,
   },
   {
     label: "Average response time",
@@ -104,11 +114,7 @@ function trackCallClick(source: string) {
   }
 }
 
-type HomePageContentProps = {
-  initialTiers?: TierWithPrices[] | null;
-};
-
-export default function HomePageContent({ initialTiers }: HomePageContentProps) {
+export default function HomePageContent() {
   return (
     <div className="relative bg-white w-full min-w-0">
       <div className="relative z-10">
@@ -369,10 +375,9 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                 innovative and tech-enabled property management partner.
               </p>
               <p className="mt-4 text-sm sm:text-base text-stone-600 leading-relaxed">
-                Today, we support homeowners with subscription plans that cover
-                everything—from bill payments and cleaning to tenant management,
-                emergency services and sale preparation—backed by clear communication
-                and structured reporting.
+                Today, we support homeowners with one end-to-end property management
+                service — tenant coordination, maintenance, inspections, bills and
+                owner reporting through one accountable Chennai team.
               </p>
             </div>
             <div className="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm">
@@ -407,8 +412,8 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                 End-to-end care for your property.
               </h2>
               <p className="mt-3 text-sm sm:text-base text-stone-600 max-w-xl">
-                Annual subscription plans for apartments, villas, bungalows and land.
-                You choose the plan; we handle the coordination. Read more about{" "}
+                One end-to-end property management service for apartments, villas and
+                bungalows in Chennai. Read more about{" "}
                 <Link
                   href="/property-management-chennai"
                   className="text-accent-700 font-medium hover:text-accent-600"
@@ -451,7 +456,7 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
                   </div>
                 </div>
                 <div className="mt-4 flex items-center justify-between text-[11px] text-stone-500">
-                  <span>Included in plans</span>
+                  <span>Included in management</span>
                   <Link
                     href={"href" in service && service.href ? service.href : "/services"}
                     className="inline-flex items-center gap-1 text-stone-700 group-hover:text-accent-600"
@@ -541,25 +546,66 @@ export default function HomePageContent({ initialTiers }: HomePageContentProps) 
       </section>
 
       {/* PRICING */}
-      <section className="py-12 lg:py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">
-            PLANS
-          </p>
-          <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
-            Simple, transparent subscriptions.
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-stone-700">
-            Annual subscription plans starting from ₹16,000/year. No hidden
-            commissions—just clear scope, reporting and SLAs.
-          </p>
-          <p className="mt-4 text-xs sm:text-sm text-stone-600">
-            Gold is our most popular plan for NRIs managing 1500+ sq. ft homes, villas
-            and multiple properties.
-          </p>
-        </div>
-        <div className="mt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PlansSection initialTiers={initialTiers} />
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">
+              PRICING
+            </p>
+            <h2 className="mt-3 font-display text-2xl sm:text-3xl font-semibold text-stone-950 tracking-tight">
+              {PRICING_HEADLINE}
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-stone-700 leading-relaxed">
+              {PRICING_CORE_ANSWER}
+            </p>
+            <p className="mt-3 text-sm text-stone-600">{PRICING_NO_TIERS}</p>
+            <p className="mt-3 text-sm text-stone-600">
+              Formula: monthly rental value × 12 × {MANAGEMENT_FEE_RATE_PERCENT}% · minimum{" "}
+              {formatInr(MINIMUM_ANNUAL_MANAGEMENT_FEE_INR)}/year + {GST_LABEL}
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
+            <div>
+              <h3 className="text-lg font-semibold text-stone-900">What&apos;s included</h3>
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2 text-sm text-stone-600">
+                {MANAGEMENT_INCLUSIONS.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="text-accent-600" aria-hidden>
+                      ✓
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 rounded-2xl border border-stone-200 bg-stone-50 p-5">
+                <h3 className="text-base font-semibold text-stone-900">
+                  Property works &amp; project management
+                </h3>
+                <p className="mt-2 text-sm text-stone-600 leading-relaxed">
+                  Repairs, maintenance, refurbishment and improvement works are separate
+                  from the annual management fee. RelyBricks coordinates those works at{" "}
+                  {PROJECT_MANAGEMENT_FEE_RATE_PERCENT}% of project value + {GST_LABEL}.
+                  Vendor labour, materials and third-party costs are billed separately.
+                </p>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/property-management-cost-chennai"
+                  className="inline-flex items-center justify-center rounded-xl bg-accent-600 px-5 py-3 text-sm font-semibold text-white hover:bg-accent-700"
+                >
+                  See pricing examples
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-xl border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-900 hover:bg-stone-50"
+                >
+                  Get a written proposal
+                </Link>
+              </div>
+            </div>
+            <PricingCalculator />
+          </div>
         </div>
       </section>
 

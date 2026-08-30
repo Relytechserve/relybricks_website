@@ -51,8 +51,9 @@ export default function PrivacyPage() {
           <p>We may collect the following types of information:</p>
           <ul>
             <li>
-              <strong>Contact form data:</strong> Name, email address, phone number, and message
-              when you submit our contact form
+              <strong>Contact and enquiry form data:</strong> Name, email address, phone number,
+              message, and optional property details when you submit our contact form or request a
+              pricing estimate through the website calculator
             </li>
             <li>
               <strong>Customer data:</strong> When you register or use our services, we collect

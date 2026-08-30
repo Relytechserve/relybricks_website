@@ -11,7 +11,7 @@ export const HOME_FAQ: FaqItem[] = [
   {
     question: "What does RelyBricks manage?",
     answer:
-      "RelyBricks is a property management company in Chennai. The team can handle tenant management, maintenance and emergencies, bills, taxes and community payments, inspections with photo and video reports, interior refurbishment support, buying and selling assistance, land and plot care, and concierge-style value-added services through one accountable local partner.",
+      "RelyBricks is a property management company in Chennai. The team can handle tenant sourcing and the tenancy lifecycle, maintenance coordination, bills, taxes and community payments, inspections with photo and video reports, vacant-property oversight, interior refurbishment coordination, buying and selling assistance, land and plot care, and owner reporting through one accountable local partner.",
   },
   {
     question: "Can RelyBricks manage my Chennai property while I live abroad?",
@@ -21,16 +21,16 @@ export const HOME_FAQ: FaqItem[] = [
   {
     question: "What property types does RelyBricks manage?",
     answer:
-      "RelyBricks manages apartments, villas, bungalows and plots in Chennai.",
+      "RelyBricks manages apartments, villas and bungalows in Chennai. Plots and land are scoped and quoted separately.",
   },
   {
     question: "Can RelyBricks manage tenants and maintenance?",
     answer:
-      "Yes. Tenant services can cover screening, onboarding, rental agreements, rent collection and renewals. Maintenance covers proactive upkeep, emergency response and coordination with verified vendors.",
+      "Yes. Tenant services can cover sourcing, screening, onboarding, rental agreements, rent collection and renewals. Maintenance coordination covers proactive upkeep, emergency response and coordination with verified vendors. Actual repair and vendor costs are separate from the management fee.",
   },
   {
-    question: "How much do property management plans start from?",
+    question: "How is RelyBricks property management priced?",
     answer:
-      "Annual subscription plans currently start from ₹16,000/year. The exact scope depends on the property and service plan.",
+      "RelyBricks charges 12% of your property's annual rental value, subject to a minimum annual management fee of ₹21,000 + applicable GST. There is one end-to-end management service — not separate Basic, Gold or Premium tiers. See the property management cost guide for examples and a calculator.",
   },
 ];

@@ -11,14 +11,14 @@ import { HOME_CRUMB, HUB_CRUMB, HUB_PATH, NRI_PATH, TENANT_PATH } from "./aeo-sh
 export const HUB_METADATA = {
   title: "Property Management in Chennai | RelyBricks",
   description:
-    "Property management services in Chennai for apartments, villas, bungalows and plots — tenants, vacant-home care, maintenance, inspections and bills. Plans from ₹16,000/year.",
+    "End-to-end property management in Chennai for apartments, villas and bungalows — 12% of annual rental value, minimum ₹21,000/year + applicable GST.",
   path: HUB_PATH,
 };
 
 export const HUB_H1 = "Property Management Services in Chennai";
 
 export const HUB_OPENING =
-  "RelyBricks provides property management services in Chennai for apartments, villas, bungalows and plots. The local team can manage tenant sourcing and the wider tenancy lifecycle, coordinate maintenance and emergencies, inspect properties with photo and video reports, and handle utility bills, taxes and community payments. Vacant homes can be visited and maintained to the agreed scope; land and plots are looked after separately. Owners who live in Chennai, elsewhere in India, or overseas work with one accountable local team. Cleaning, pest control, refurbishment support and buying or selling assistance are available where needed. Annual subscription plans currently start from ₹16,000/year.";
+  "RelyBricks provides end-to-end property management in Chennai for apartments, villas and bungalows. The local team manages tenant sourcing and the tenancy lifecycle, coordinates maintenance and emergencies, inspects properties with photo and video reports, and handles utility bills, taxes and community payments. Vacant homes receive oversight to the agreed scope; land and plots are quoted separately. Owners in Chennai, elsewhere in India or overseas work with one accountable team. Management is priced at 12% of annual rental value, subject to a minimum annual fee of ₹21,000 + applicable GST.";
 
 export const HUB_BREADCRUMBS: BreadcrumbItem[] = [HOME_CRUMB, HUB_CRUMB];
 
@@ -49,9 +49,9 @@ export const HUB_FEATURES: FeatureItem[] = [
       "If a flat, villa or bungalow is unoccupied, RelyBricks can carry out visits and coordinate cleaning, maintenance and other property-care requirements based on the agreed management scope.",
   },
   {
-    title: "Land, plots, cleaning and extra support",
+    title: "Land, plots and project coordination",
     description:
-      "Plot care as a separate line; scheduled cleaning and pest control; refurbishment support and buying or selling assistance when you need them.",
+      "Plot care is separately scoped; refurbishment and buying or selling assistance when you need them. Property works are managed separately.",
   },
 ];
 
@@ -102,7 +102,7 @@ export const HUB_FAQS: FaqItem[] = [
   {
     question: "What does RelyBricks manage?",
     answer:
-      "Tenant sourcing and the tenancy lifecycle, vacant residential care, maintenance and emergency coordination, bills, taxes and community payments, inspections with photo and video reports, cleaning and pest control, land and plot care, plus refurbishment support and buying or selling assistance when required.",
+      "Tenant sourcing and the tenancy lifecycle, vacant residential care, maintenance coordination, bills, taxes and community payments, inspections with photo and video reports, and owner reporting. Land and plot care, refurbishment and buying or selling assistance are scoped separately.",
   },
   {
     question: "Can someone living outside Chennai use this?",
@@ -127,7 +127,7 @@ export const HUB_FAQS: FaqItem[] = [
   {
     question: "How much does it cost?",
     answer:
-      "Annual plans currently start from ₹16,000/year. Scope depends on the property and the plan. Current inclusions are on the services page.",
+      "RelyBricks charges 12% of your property's annual rental value, subject to a minimum annual management fee of ₹21,000 + applicable GST. See the property management cost guide for examples.",
   },
   {
     question: "How do I start?",
@@ -160,8 +160,8 @@ export const HUB_RELATED: RelatedLinkItem[] = [
     href: TENANT_PATH,
   },
   {
-    title: "Current plans and inclusions",
-    description: "See what Basic, Gold and Premium cover.",
+    title: "What the management fee includes",
+    description: "End-to-end property management on the services page.",
     href: "/services",
   },
   {

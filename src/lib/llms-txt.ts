@@ -28,6 +28,13 @@ ${urls.map((url) => `- ${url}`).join("\n")}
 ## Services
 RelyBricks supports tenant lifecycle management, property inspections, maintenance coordination, payments, remote reporting, refurbishment, buying/selling support and land/plot care.
 
+## Pricing
+- End-to-end property management: 12% of annual rental value
+- Minimum annual management fee: ₹21,000 + applicable GST
+- Tenant sourcing and day-to-day property management are included in the management fee
+- Property works and third-party costs are separate
+- Project management for property works: 15% of project value + applicable GST
+
 ## Contact
 - Website: ${base}
 - Email: info@relybricks.com
