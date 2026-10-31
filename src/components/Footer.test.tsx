@@ -42,4 +42,17 @@ describe("Footer", () => {
       "/services",
     );
   });
+
+  it("links social profiles in the contact section", () => {
+    render(<Footer />);
+    expect(screen.getByRole("link", { name: "LinkedIn" }).getAttribute("href")).toBe(
+      "https://www.linkedin.com/company/relybricks",
+    );
+    expect(screen.getByRole("link", { name: "Facebook" }).getAttribute("href")).toBe(
+      "https://www.facebook.com/RELYBRICKS/",
+    );
+    expect(screen.getByRole("link", { name: "Instagram" }).getAttribute("href")).toBe(
+      "https://www.instagram.com/relybricks/",
+    );
+  });
 });
