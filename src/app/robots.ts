@@ -7,6 +7,7 @@ export const ROBOTS_DISALLOW = [
   "/dashboard/",
   "/login",
   "/register",
+  "/reset-password",
   "/auth/",
 ] as const;
 
