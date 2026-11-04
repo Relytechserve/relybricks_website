@@ -5,9 +5,13 @@ import { StrictMode } from "react";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  RECOVERY_CAPTURE_SCRIPT,
   RECOVERY_LINK_EXPIRED,
   RECOVERY_LINK_MISSING,
   RECOVERY_LINK_UNUSABLE,
+  RECOVERY_STASH_KEY,
+  recoverySessionPoll,
+  resetRecoveryAdoptionForTests,
 } from "@/lib/recovery-link";
 
 const replace = vi.fn();
@@ -68,6 +72,10 @@ beforeEach(() => {
   updateUser.mockReset();
   signOut.mockReset();
   signOut.mockResolvedValue({ error: null });
+  sessionStorage.clear();
+  resetRecoveryAdoptionForTests();
+  recoverySessionPoll.attempts = 3;
+  recoverySessionPoll.delayMs = 0;
 });
 
 afterEach(() => {
@@ -97,7 +105,10 @@ describe("ResetPasswordPage", () => {
     expect((await screen.findByRole("alert")).textContent).toBe(RECOVERY_LINK_EXPIRED);
     expect(screen.queryByLabelText("New password")).toBeNull();
     expect(setSession).not.toHaveBeenCalled();
-    expect(getUser).not.toHaveBeenCalled();
+    expect(verifyOtp).not.toHaveBeenCalled();
+    expect(getUser).toHaveBeenCalled();
+    expect(window.location.pathname).toBe("/reset-password");
+    expect(window.location.href).not.toContain("/verify");
   });
 
   it("establishes a session from a recovery hash before showing the form", async () => {
@@ -209,5 +220,102 @@ describe("ResetPasswordPage", () => {
 
     expect((await screen.findByRole("alert")).textContent).toBe(RECOVERY_LINK_UNUSABLE);
     expect(routerReplace).not.toHaveBeenCalled();
+  });
+
+  it("adopts a recovery hash once, even when the effect is replayed", async () => {
+    setLocation(
+      "https://relybricks.com/reset-password#access_token=access-token&refresh_token=refresh-token&type=recovery",
+    );
+    setSession.mockResolvedValue({ error: null });
+
+    render(
+      <StrictMode>
+        <ResetPasswordPage />
+      </StrictMode>,
+    );
+
+    expect(await screen.findByLabelText("New password")).toBeTruthy();
+    expect(setSession).toHaveBeenCalledTimes(1);
+    expect(verifyOtp).not.toHaveBeenCalled();
+  });
+
+  it("keeps the set-password form when a later verify redirect only has an error", async () => {
+    setLocation(
+      "https://relybricks.com/reset-password#access_token=saved-access&refresh_token=saved-refresh&type=recovery",
+    );
+    window.eval(RECOVERY_CAPTURE_SCRIPT);
+    setLocation(
+      "https://relybricks.com/reset-password#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired",
+    );
+    setSession.mockResolvedValue({ error: null });
+
+    render(<ResetPasswordPage />);
+
+    expect(await screen.findByLabelText("New password")).toBeTruthy();
+    expect(setSession).toHaveBeenCalledTimes(1);
+    expect(setSession).toHaveBeenCalledWith({
+      access_token: "saved-access",
+      refresh_token: "saved-refresh",
+    });
+    expect(verifyOtp).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(RECOVERY_STASH_KEY)).toBeNull();
+    expect(window.location.hash).toBe("");
+    expect(window.location.search).toBe("");
+    expect(screen.queryByText(RECOVERY_LINK_EXPIRED)).toBeNull();
+  });
+
+  it("shows the form for an error redirect when a recovery session already exists", async () => {
+    setLocation(
+      "https://relybricks.com/reset-password#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired",
+    );
+    getUser.mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
+
+    render(<ResetPasswordPage />);
+
+    expect(await screen.findByLabelText("New password")).toBeTruthy();
+    expect(setSession).not.toHaveBeenCalled();
+    expect(verifyOtp).not.toHaveBeenCalled();
+    expect(window.location.hash).toBe("");
+    expect(window.location.search).toBe("");
+  });
+
+  it("ignores an error hashchange after the recovery session is saved", async () => {
+    setLocation(
+      "https://relybricks.com/reset-password#access_token=access-token&refresh_token=refresh-token&type=recovery",
+    );
+    setSession.mockResolvedValue({ error: null });
+
+    render(<ResetPasswordPage />);
+
+    expect(await screen.findByLabelText("New password")).toBeTruthy();
+    setLocation(
+      "https://relybricks.com/reset-password#error=access_denied&error_code=otp_expired",
+    );
+    window.dispatchEvent(new Event("hashchange"));
+
+    expect(screen.getByLabelText("New password")).toBeTruthy();
+    expect(setSession).toHaveBeenCalledTimes(1);
+    expect(window.location.hash).toBe("");
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("does not call verify or setSession again when the cleaned URL is opened", async () => {
+    setLocation(
+      "https://relybricks.com/reset-password#access_token=access-token&refresh_token=refresh-token&type=recovery",
+    );
+    setSession.mockResolvedValue({ error: null });
+    getUser.mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
+
+    const first = render(<ResetPasswordPage />);
+    expect(await screen.findByLabelText("New password")).toBeTruthy();
+    expect(setSession).toHaveBeenCalledTimes(1);
+    first.unmount();
+
+    setLocation("https://relybricks.com/reset-password");
+    render(<ResetPasswordPage />);
+
+    expect(await screen.findByLabelText("New password")).toBeTruthy();
+    expect(setSession).toHaveBeenCalledTimes(1);
+    expect(verifyOtp).not.toHaveBeenCalled();
   });
 });
