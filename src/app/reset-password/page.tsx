@@ -5,28 +5,41 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import {
+  adoptRecoverySession,
+  attemptOnce,
+  clearStashedRecoverySession,
   followRecoveryCode,
+  hasRecoveryClaim,
   interpretRecoveryLink,
+  readStashedRecoverySession,
   recoveryTransportMessage,
   RECOVERY_LINK_MISSING,
   RECOVERY_LINK_UNAVAILABLE,
   RECOVERY_LINK_UNUSABLE,
+  stashRecoverySession,
+  type StashedRecoverySession,
 } from "@/lib/recovery-link";
 
 type Phase = "checking" | "ready" | "blocked";
 
-type AttemptResult = { ok: boolean; error: { message?: string } | null };
+function replaceRecoveryUrl(next: string) {
+  const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (current === next) return;
+  window.history.replaceState(window.history.state, "", next);
+}
 
-const recoveryAttempts = new Map<string, Promise<AttemptResult>>();
+type UserLookup = { found: boolean; error: { message?: string } | null };
 
-function attemptOnce(key: string, run: () => Promise<AttemptResult>): Promise<AttemptResult> {
-  const existing = recoveryAttempts.get(key);
-  if (existing) return existing;
-  const pending = run().finally(() => {
-    if (recoveryAttempts.get(key) === pending) recoveryAttempts.delete(key);
-  });
-  recoveryAttempts.set(key, pending);
-  return pending;
+async function lookupUser(
+  supabase: NonNullable<ReturnType<typeof createClient>>,
+): Promise<UserLookup> {
+  try {
+    const result = await supabase.auth.getUser();
+    return { found: Boolean(result?.data?.user), error: result?.error ?? null };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "";
+    return { found: false, error: { message } };
+  }
 }
 
 export default function ResetPasswordPage() {
@@ -57,16 +70,23 @@ export default function ResetPasswordPage() {
 
       try {
         const link = interpretRecoveryLink(window.location.href);
-
-        if (link.kind === "error") {
-          if (current()) {
-            setError(link.message);
-            setPhase("blocked");
-          }
-          return;
+        // Copy implicit tokens out of the URL before any await. A later failed
+        // GET /verify redirects to this same path with only an error fragment,
+        // and a refresh must not submit the refresh token a second time.
+        if (link.kind === "session") {
+          stashRecoverySession({
+            accessToken: link.accessToken,
+            refreshToken: link.refreshToken,
+          });
+          replaceRecoveryUrl("/reset-password");
         }
 
-        if (link.kind === "code") {
+        const session: StashedRecoverySession | null =
+          link.kind === "session"
+            ? { accessToken: link.accessToken, refreshToken: link.refreshToken }
+            : readStashedRecoverySession();
+
+        if (link.kind === "code" && !session) {
           followRecoveryCode(window.location.origin, link.code);
           return;
         }
@@ -80,58 +100,80 @@ export default function ResetPasswordPage() {
           return;
         }
 
-        if (link.kind === "session") {
+        if (session) {
           // The SSR browser client is locked to PKCE and will not adopt implicit
           // `#access_token` / `#refresh_token` redirects from generateLink.
-          // One attempt per token: React Strict Mode replays this effect in dev,
-          // and a second setSession is unnecessary once the first is in flight.
-          const { error: sessionError } = await attemptOnce(
-            `session:${link.accessToken}:${link.refreshToken}`,
+          const adopted = await adoptRecoverySession(
+            session,
             async () => {
               const { error } = await supabase.auth.setSession({
-                access_token: link.accessToken,
-                refresh_token: link.refreshToken,
+                access_token: session.accessToken,
+                refresh_token: session.refreshToken,
               });
               return { ok: !error, error };
             },
+            async () => (await lookupUser(supabase)).found,
           );
           if (!current()) return;
-          if (sessionError) {
-            setError(recoveryTransportMessage(sessionError) ?? RECOVERY_LINK_UNUSABLE);
+          if (!adopted.ok) {
+            const recovered = await lookupUser(supabase);
+            if (!current()) return;
+            if (recovered.found) {
+              clearStashedRecoverySession();
+              replaceRecoveryUrl("/reset-password");
+              setPhase("ready");
+              return;
+            }
+            if (!recoveryTransportMessage(adopted.error)) clearStashedRecoverySession();
+            setError(recoveryTransportMessage(adopted.error) ?? RECOVERY_LINK_UNUSABLE);
             setPhase("blocked");
             return;
           }
-          window.history.replaceState(window.history.state, "", "/reset-password");
+          clearStashedRecoverySession();
+          replaceRecoveryUrl("/reset-password");
           setPhase("ready");
+          return;
+        }
+
+        if (link.kind === "error") {
+          // The fragment is not a credential. Keep a stable error query so a
+          // refresh still explains the failure, without contacting /verify.
+          replaceRecoveryUrl("/reset-password?error=access_denied&error_code=otp_expired");
+          const recovered = await lookupUser(supabase);
+          if (!current()) return;
+          if (recovered.found) {
+            replaceRecoveryUrl("/reset-password");
+            setPhase("ready");
+            return;
+          }
+          setError(recoveryTransportMessage(recovered.error) ?? link.message);
+          setPhase("blocked");
           return;
         }
 
         if (link.kind === "otp") {
-          const { error: otpError } = await attemptOnce(
-            `otp:${link.type}:${link.tokenHash}`,
-            async () => {
-              const { error } = await supabase.auth.verifyOtp({
-                token_hash: link.tokenHash,
-                type: link.type,
-              });
-              return { ok: !error, error };
-            },
-          );
+          const adopted = await attemptOnce(`otp:${link.type}:${link.tokenHash}`, async () => {
+            const { error } = await supabase.auth.verifyOtp({
+              token_hash: link.tokenHash,
+              type: link.type,
+            });
+            return { ok: !error, error };
+          });
           if (!current()) return;
-          if (otpError) {
-            setError(recoveryTransportMessage(otpError) ?? RECOVERY_LINK_UNUSABLE);
+          if (!adopted.ok) {
+            setError(recoveryTransportMessage(adopted.error) ?? RECOVERY_LINK_UNUSABLE);
             setPhase("blocked");
             return;
           }
-          window.history.replaceState(window.history.state, "", "/reset-password");
+          replaceRecoveryUrl("/reset-password");
           setPhase("ready");
           return;
         }
 
-        const { data, error: userError } = await supabase.auth.getUser();
+        const recovered = await lookupUser(supabase);
         if (!current()) return;
-        if (userError || !data.user) {
-          setError(recoveryTransportMessage(userError) ?? RECOVERY_LINK_MISSING);
+        if (!recovered.found) {
+          setError(recoveryTransportMessage(recovered.error) ?? RECOVERY_LINK_MISSING);
           setPhase("blocked");
           return;
         }
@@ -145,7 +187,14 @@ export default function ResetPasswordPage() {
     }
 
     function onHashChange() {
-      void establishSession();
+      const next = interpretRecoveryLink(window.location.href);
+      // A failed repeat of the email link redirects here with an error fragment.
+      // That must not cancel a recovery session already taken from the hash.
+      if (next.kind === "error" && (readStashedRecoverySession() || hasRecoveryClaim())) {
+        replaceRecoveryUrl("/reset-password");
+        return;
+      }
+      if (next.kind === "session") void establishSession();
     }
 
     void establishSession();

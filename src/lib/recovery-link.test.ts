@@ -1,8 +1,18 @@
-import { describe, expect, it } from "vitest";
+/** @vitest-environment jsdom */
+
+import { beforeEach, describe, expect, it } from "vitest";
 import {
+  adoptRecoverySession,
   interpretRecoveryLink,
-  recoveryCallbackUrl,
+  readStashedRecoverySession,
+  RECOVERY_CAPTURE_SCRIPT,
   RECOVERY_LINK_EXPIRED,
+  RECOVERY_CLAIM_KEY,
+  RECOVERY_STASH_KEY,
+  recoveryCallbackUrl,
+  recoveryClaimMarker,
+  recoverySessionPoll,
+  resetRecoveryAdoptionForTests,
   safeNextPath,
 } from "./recovery-link";
 
@@ -85,6 +95,112 @@ describe("recoveryCallbackUrl", () => {
     expect(recoveryCallbackUrl("https://relybricks.com", "auth-code")).toBe(
       "https://relybricks.com/auth/callback?code=auth-code&next=%2Freset-password",
     );
+  });
+});
+
+describe("recovery capture script", () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+    window.history.replaceState(null, "", "/reset-password");
+  });
+
+  it("stores implicit tokens and clears them from the URL without leaving the page", () => {
+    window.history.replaceState(
+      null,
+      "",
+      "/reset-password#access_token=access&refresh_token=refresh&type=recovery",
+    );
+
+    window.eval(RECOVERY_CAPTURE_SCRIPT);
+
+    expect(readStashedRecoverySession()).toEqual({
+      accessToken: "access",
+      refreshToken: "refresh",
+    });
+    expect(window.location.pathname).toBe("/reset-password");
+    expect(window.location.hash).toBe("");
+    expect(window.location.search).toBe("");
+    expect(RECOVERY_CAPTURE_SCRIPT).not.toContain("/verify");
+    expect(RECOVERY_CAPTURE_SCRIPT).not.toContain("location.replace");
+    expect(RECOVERY_CAPTURE_SCRIPT).not.toContain("location.assign");
+  });
+
+  it("leaves a stashed session in place when a later redirect only has an error", () => {
+    sessionStorage.setItem(
+      RECOVERY_STASH_KEY,
+      JSON.stringify({ accessToken: "access", refreshToken: "refresh" }),
+    );
+    window.history.replaceState(
+      null,
+      "",
+      "/reset-password#error=access_denied&error_code=otp_expired",
+    );
+
+    window.eval(RECOVERY_CAPTURE_SCRIPT);
+
+    expect(readStashedRecoverySession()).toEqual({
+      accessToken: "access",
+      refreshToken: "refresh",
+    });
+    expect(window.location.hash).toContain("error_code=otp_expired");
+  });
+});
+
+describe("adoptRecoverySession", () => {
+  const session = { accessToken: "access", refreshToken: "refresh" };
+
+  beforeEach(() => {
+    sessionStorage.clear();
+    resetRecoveryAdoptionForTests();
+    recoverySessionPoll.attempts = 2;
+    recoverySessionPoll.delayMs = 0;
+  });
+
+  it("calls setSession once for the same refresh token", async () => {
+    let calls = 0;
+    let resolveAdopt: (result: { ok: boolean; error: null }) => void = () => {};
+    const pending = new Promise<{ ok: boolean; error: null }>((resolve) => {
+      resolveAdopt = resolve;
+    });
+    const adopt = () => {
+      calls += 1;
+      return pending;
+    };
+
+    const first = adoptRecoverySession(session, adopt, async () => false);
+    const second = adoptRecoverySession(session, adopt, async () => false);
+    expect(calls).toBe(1);
+    resolveAdopt({ ok: true, error: null });
+    await expect(Promise.all([first, second])).resolves.toEqual([
+      { ok: true, error: null },
+      { ok: true, error: null },
+    ]);
+
+    await adoptRecoverySession(session, adopt, async () => true);
+    expect(calls).toBe(1);
+    expect(sessionStorage.getItem(RECOVERY_CLAIM_KEY) ?? "").not.toContain(session.refreshToken);
+  });
+
+  it("does not call setSession again while an earlier attempt is still pending", async () => {
+    sessionStorage.setItem(RECOVERY_CLAIM_KEY, recoveryClaimMarker(session.refreshToken, "pending"));
+    let calls = 0;
+    let lookups = 0;
+
+    const result = await adoptRecoverySession(
+      session,
+      () => {
+        calls += 1;
+        return Promise.resolve({ ok: true, error: null });
+      },
+      async () => {
+        lookups += 1;
+        return lookups > 1;
+      },
+    );
+
+    expect(result).toEqual({ ok: true, error: null });
+    expect(calls).toBe(0);
+    expect(lookups).toBe(2);
   });
 });
 

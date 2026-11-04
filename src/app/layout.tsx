@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
 import LayoutShell from "@/components/LayoutShell";
 import RootJsonLd from "@/components/RootJsonLd";
+import { RECOVERY_CAPTURE_SCRIPT } from "@/lib/recovery-link";
 import { getSiteUrl } from "@/lib/site";
 
 const GA_MEASUREMENT_ID = "G-5TQW60DTGZ";
@@ -98,6 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en-IN" className={`${dmSans.variable} ${sora.variable} antialiased`}>
       <body className="min-h-screen flex flex-col font-sans bg-white text-stone-800 overflow-x-hidden">
+        <script id="recovery-capture" dangerouslySetInnerHTML={{ __html: RECOVERY_CAPTURE_SCRIPT }} />
         <RootJsonLd />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
