@@ -29,13 +29,18 @@ import {
   NRI_STEPS,
 } from "@/content/nri-property-management-chennai";
 import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact";
+import { getGooglePlaceSummary } from "@/lib/google-place-summary";
 import { buildServiceWebPageGraph } from "@/lib/jsonld";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata(NRI_METADATA);
 
-export default function NriPropertyManagementChennaiPage() {
+/** Matches GOOGLE_PLACE_REVALIDATE_SECONDS. ISR even before the Places key is set. */
+export const revalidate = 21600;
+
+export default async function NriPropertyManagementChennaiPage() {
   const featuredReview = getGoogleReviewById(NRI_FEATURED_GOOGLE_REVIEW_ID);
+  const googlePlace = await getGooglePlaceSummary();
 
   return (
     <ContentPage breadcrumbs={NRI_BREADCRUMBS}>
@@ -144,7 +149,12 @@ export default function NriPropertyManagementChennaiPage() {
 
       <Section title="What owners say" tone="muted">
         {featuredReview ? (
-          <GoogleReviewsSection variant="featured" reviews={[featuredReview]} />
+          <GoogleReviewsSection
+            variant="featured"
+            reviews={[featuredReview]}
+            rating={googlePlace.rating}
+            reviewCount={googlePlace.reviewCount}
+          />
         ) : null}
       </Section>
 
