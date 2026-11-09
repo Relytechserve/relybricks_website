@@ -9,8 +9,19 @@ export type GoogleReview = {
 export const GOOGLE_BUSINESS_PROFILE_URL =
   "https://www.google.com/maps/place/Relybricks+Property+Management/@13.016304,80.243796,17z/data=!4m8!3m7!1s0x3a525de7a8af7037:0xd6b3324bf3b4d0e5!8m2!3d13.016304!4d80.243796!9m1!1b1!16s%2Fg%2F11hdc4hhnh";
 
-export const GOOGLE_RATING = 5.0;
-export const GOOGLE_REVIEW_COUNT = 28;
+/**
+ * Shown when the Places API key or place id is unset, or the lookup fails.
+ * Live values come from `getGooglePlaceSummary`.
+ */
+export const GOOGLE_PLACE_FALLBACK = {
+  rating: 5.0,
+  reviewCount: 36,
+} as const;
+
+export type GooglePlaceSummary = {
+  rating: number;
+  reviewCount: number;
+};
 
 /** Verbatim quotes from the public Google Business profile (Aug 2026). */
 export const GOOGLE_REVIEWS: GoogleReview[] = [
