@@ -15,6 +15,7 @@ import PricingCalculator from "@/components/PricingCalculator";
 import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import { Tiles } from "@/components/ui/tiles";
 import { HOME_FAQ } from "@/lib/home-faq";
+import type { GooglePlaceSummary } from "@/data/google-reviews";
 import {
   GST_LABEL,
   MANAGEMENT_FEE_RATE_PERCENT,
@@ -114,7 +115,7 @@ function trackCallClick(source: string) {
   }
 }
 
-export default function HomePageContent() {
+export default function HomePageContent({ googlePlace }: { googlePlace: GooglePlaceSummary }) {
   return (
     <div className="relative bg-white w-full min-w-0">
       <div className="relative z-10">
@@ -612,6 +613,8 @@ export default function HomePageContent() {
       <GoogleReviewsSection
         title="“I have no hesitation in recommending their services.”"
         description="Real feedback from owners who use RelyBricks for property management in Chennai — including overseas owners managing homes remotely."
+        rating={googlePlace.rating}
+        reviewCount={googlePlace.reviewCount}
       />
 
       {/* FAQ — visible copy must match HomeFaqJsonLd / HOME_FAQ */}

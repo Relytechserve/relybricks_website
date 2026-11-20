@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import { teamMembers } from "@/data/team";
+import { getGooglePlaceSummary } from "@/lib/google-place-summary";
 
 function initialsFromName(name: string) {
   return name
@@ -23,6 +24,9 @@ const values = [
   "Peace of mind for NRIs and out-of-station owners",
 ];
 
+/** Matches GOOGLE_PLACE_REVALIDATE_SECONDS. ISR even before the Places key is set. */
+export const revalidate = 21600;
+
 export const metadata: Metadata = {
   title: "About Us | RelyBricks - Property Management Chennai",
   description:
@@ -36,7 +40,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutUsPage() {
+export default async function AboutUsPage() {
+  const googlePlace = await getGooglePlaceSummary();
+
   return (
     <div>
       <section className="relative py-24 lg:py-32 bg-gradient-to-br from-accent-700 to-stone-900 overflow-hidden">
@@ -165,7 +171,11 @@ export default function AboutUsPage() {
 
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <GoogleReviewsSection variant="compact" />
+          <GoogleReviewsSection
+            variant="compact"
+            rating={googlePlace.rating}
+            reviewCount={googlePlace.reviewCount}
+          />
         </div>
       </section>
 

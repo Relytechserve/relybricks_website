@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { renderToString } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 import type { FaqItem } from "@/lib/home-faq";
 import PropertyManagementChennaiPage from "@/app/property-management-chennai/page";
 import NriPropertyManagementChennaiPage from "@/app/nri-property-management-chennai/page";
@@ -115,8 +117,13 @@ describe("/property-management-chennai", () => {
 });
 
 describe("/nri-property-management-chennai", () => {
-  const html = renderToString(<NriPropertyManagementChennaiPage />);
-  const text = visibleText(html);
+  let html = "";
+  let text = "";
+
+  beforeAll(async () => {
+    html = renderToString(await NriPropertyManagementChennaiPage());
+    text = visibleText(html);
+  });
 
   it("renders the overseas-owner opening, vacant and tenanted sections, and featured Google review", () => {
     const featuredReview = getGoogleReviewById(NRI_FEATURED_GOOGLE_REVIEW_ID);
@@ -129,6 +136,8 @@ describe("/nri-property-management-chennai", () => {
     expect(text).toContain(featuredReview!.quote);
     expect(text).toContain("Niranjan Reddy");
     expect(text).toContain("Google review");
+    expect(text).toContain("36 reviews");
+    expect(text).toContain(">5.0<");
   });
 
   it("emits Chennai-only Service schema and matching FAQs", () => {
@@ -137,6 +146,8 @@ describe("/nri-property-management-chennai", () => {
     expect(services[0].name).toBe(
       "Property management in Chennai for owners living abroad",
     );
+    expect(services[0]).not.toHaveProperty("aggregateRating");
+    expect(services[0]).not.toHaveProperty("reviewCount");
     const area = JSON.stringify(services[0].areaServed);
     expect(area).toContain("Chennai");
     expect(area).toContain("India");

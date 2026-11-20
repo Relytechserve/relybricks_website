@@ -4,8 +4,8 @@ import GoogleReviewCarousel from "@/components/GoogleReviewCarousel";
 import GoogleReviewScore from "@/components/GoogleReviewScore";
 import {
   GOOGLE_BUSINESS_PROFILE_URL,
+  GOOGLE_PLACE_FALLBACK,
   GOOGLE_REVIEWS,
-  GOOGLE_REVIEW_COUNT,
   type GoogleReview,
 } from "@/data/google-reviews";
 
@@ -16,6 +16,8 @@ type GoogleReviewsSectionProps = {
   title?: string;
   description?: string;
   className?: string;
+  rating?: number;
+  reviewCount?: number;
 };
 
 function GoogleReviewsLink({ children }: { children: ReactNode }) {
@@ -38,9 +40,11 @@ export default function GoogleReviewsSection({
   title = "What owners say about RelyBricks",
   description,
   className = "",
+  rating = GOOGLE_PLACE_FALLBACK.rating,
+  reviewCount = GOOGLE_PLACE_FALLBACK.reviewCount,
 }: GoogleReviewsSectionProps) {
   const reviewsLink = (
-    <GoogleReviewsLink>{GOOGLE_REVIEW_COUNT} reviews</GoogleReviewsLink>
+    <GoogleReviewsLink>{`${reviewCount} reviews`}</GoogleReviewsLink>
   );
 
   if (variant === "featured") {
@@ -50,7 +54,7 @@ export default function GoogleReviewsSection({
     return (
       <section className={className}>
         <div className="mb-6">
-          <GoogleReviewScore link={reviewsLink} compact />
+          <GoogleReviewScore link={reviewsLink} rating={rating} reviewCount={reviewCount} compact />
         </div>
         <GoogleReviewCard review={review} variant="featured" />
         <p className="mt-5 text-sm text-stone-500">
@@ -77,7 +81,7 @@ export default function GoogleReviewsSection({
             Trusted by homeowners in Chennai
           </h2>
           <div className="mt-5">
-            <GoogleReviewScore link={reviewsLink} compact />
+            <GoogleReviewScore link={reviewsLink} rating={rating} reviewCount={reviewCount} compact />
           </div>
 
           <div className="mt-8 hidden gap-5 sm:grid sm:grid-cols-3">
@@ -124,7 +128,7 @@ export default function GoogleReviewsSection({
               <p className="mt-3 text-sm sm:text-base text-stone-600 leading-relaxed">{description}</p>
             ) : null}
           </div>
-          <GoogleReviewScore link={reviewsLink} />
+          <GoogleReviewScore link={reviewsLink} rating={rating} reviewCount={reviewCount} />
         </div>
 
         <div className="mt-12 lg:mt-14">
@@ -133,7 +137,7 @@ export default function GoogleReviewsSection({
 
         <p className="mt-10 text-center text-sm text-stone-600">
           Reviews are from the public Google Business profile.{" "}
-          <GoogleReviewsLink>Read all {GOOGLE_REVIEW_COUNT} reviews on Google</GoogleReviewsLink>
+          <GoogleReviewsLink>{`Read all ${reviewCount} reviews on Google`}</GoogleReviewsLink>
         </p>
       </div>
     </section>
